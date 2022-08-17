@@ -1,8 +1,8 @@
 import { Box, Button, Chip, Grid, Typography } from "@mui/material";
 import React from "react";
 import { ShopLayout } from "../../components/layouts";
-import { SlideShow } from "../../components/products";
-import { ItemCounter } from "../../components/ui/ItemCounter";
+import { ProductSizeSelector, SlideShow } from "../../components/products";
+import { ProductItemCounter } from "../../components/ui";
 import { initialData } from "../../database/products";
 
 const product = initialData.products[0];
@@ -28,7 +28,11 @@ const slug = () => {
             {/* Cantidad */}
             <Box sx={{ my: 2 }}>
               <Typography variant="subtitle2">Cantidad</Typography>
-              <ItemCounter />
+              <ProductItemCounter />
+              <ProductSizeSelector
+                selectedSize={product.sizes[0]}
+                sizes={product.sizes}
+              />
             </Box>
 
             {/* Agregar al carrito */}

@@ -7,7 +7,7 @@ interface Props {
   max?: number;
 }
 
-export const ItemCounter: FC<any> = ({ min = 0, max = 1 }) => {
+export const ProductItemCounter: FC<any> = ({ min = 0, max = 1 }) => {
   const [itemCount, setItemCount] = useState(0);
 
   const add = () =>

@@ -6,3 +6,6 @@ export * from "./ProductCard";
 
 // SlideShow
 export * from "./ProductSlideShow";
+
+// ProductSizeSelector
+export * from './ProductSizeSelector'
