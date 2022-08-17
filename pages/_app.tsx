@@ -1,9 +1,9 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
-import { ThemeProvider } from '@emotion/react'
+import "../styles/globals.css";
+import type { AppProps } from "next/app";
 
-import { lightTheme } from '../themes';
-import { CssBaseline } from '@mui/material';
+import { CssBaseline, ThemeProvider } from "@mui/material";
+
+import { lightTheme } from "../themes";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -14,4 +14,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-export default MyApp
+export default MyApp;

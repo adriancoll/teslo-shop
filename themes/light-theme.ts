@@ -20,13 +20,13 @@ export const lightTheme = createTheme({
     },
     MuiAppBar: {
       defaultProps: {
-        elevation: 0,
         position: 'fixed',
+        elevation: 0
       },
       styleOverrides: {
         root: {
           backgroundColor: 'white',
-          height: 60
+          height: 60,
         },
       }
     },
