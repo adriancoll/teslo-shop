@@ -1,6 +1,17 @@
 import NextLink from "next/link";
 
-import { Toolbar, Link, Typography, Box, AppBar, Button } from "@mui/material";
+import { SearchOutlined, ShoppingCartOutlined } from "@mui/icons-material";
+
+import {
+  Toolbar,
+  Link,
+  Typography,
+  Box,
+  AppBar,
+  Button,
+  IconButton,
+  Badge,
+} from "@mui/material";
 
 export const Navbar = () => {
   return (
@@ -14,7 +25,15 @@ export const Navbar = () => {
         </NextLink>
 
         <Box sx={{ flex: 1 }} />
-        <Box>
+
+        <Box
+          sx={{
+            display: {
+              xs: "none",
+              sm: "block",
+            },
+          }}
+        >
           <NextLink passHref href={"/category/men"}>
             <Link>
               <Button>Hombres</Button>
@@ -31,6 +50,24 @@ export const Navbar = () => {
             </Link>
           </NextLink>
         </Box>
+
+        <Box sx={{ flex: 1 }} />
+
+        <IconButton>
+          <SearchOutlined />
+        </IconButton>
+
+        <NextLink href="cart">
+          <Link>
+            <IconButton>
+              <Badge badgeContent={2} color="secondary">
+                <ShoppingCartOutlined />
+              </Badge>
+            </IconButton>
+          </Link>
+        </NextLink>
+
+        <Button>Menú</Button>
       </Toolbar>
     </AppBar>
   );
