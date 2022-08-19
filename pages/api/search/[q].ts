@@ -7,7 +7,7 @@ type ProductData =
   | {
       message: string
     }
-  | { products: IProducts[] }
+  | IProducts[]
 
 export default function handler(
   req: NextApiRequest,
@@ -43,5 +43,5 @@ const searchProducts = async (
 
   await db.disconnect()
 
-  return res.status(200).json({ products })
+  return res.status(200).json(products)
 }

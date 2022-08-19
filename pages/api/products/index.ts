@@ -3,7 +3,7 @@ import { db, SHOP_CONSTANTS } from '../../../database'
 import { IProducts } from '../../../interfaces'
 import { Product } from '../../../models'
 
-type ProductsData = { products: IProducts[] } | { message: string }
+type ProductsData = IProducts[] | { message: string }
 
 export default function (
   req: NextApiRequest,
@@ -36,5 +36,5 @@ const getAllProducts = async (
     .lean()
 
   await db.disconnect()
-  return res.status(200).json({ products })
+  return res.status(200).json(products)
 }
