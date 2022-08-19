@@ -2,8 +2,6 @@ import { Box, Button, Grid, Typography } from '@mui/material'
 
 import { GetServerSideProps, NextPage } from 'next'
 import { IProducts } from '../../interfaces'
-import { db } from '../../database'
-import { Product } from '../../models'
 import { ShopLayout } from '../../components/layouts'
 import { ProductSizeSelector, SlideShow } from '../../components/products'
 import { ProductItemCounter } from '../../components/ui'
@@ -58,16 +56,17 @@ const ProductDetailPage: NextPage<Props> = ({ product }) => (
   </ShopLayout>
 )
 
-export const getServerSideProps: GetServerSideProps = async ctx => {
-  const { slug } = ctx.params as { slug: string }
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const { slug = '' } = params as { slug: string }
 
   const product = await getProductBySlug(slug)
 
-  if (!product)
+  if (!product) {
     return {
       redirect: '/',
       permanent: false
     }
+  }
 
   return {
     props: {
