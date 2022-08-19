@@ -15,3 +15,7 @@ export interface IProducts extends BaseEntity {
   type: IType
   gender: 'men' | 'women' | 'kid' | 'unisex'
 }
+
+export interface ProductSlug {
+  slug: string
+}

@@ -68,14 +68,11 @@ export const CartList: FC<Props> = ({ editable = false }) => {
           >
             <Typography variant="subtitle1">{`$${product.price}`}</Typography>
 
-            {
-              editable && (
-                <Button variant="text" color="secondary">
-                  Remover
-                </Button>
-              )
-            }
-
+            {editable && (
+              <Button variant="text" color="secondary">
+                Remover
+              </Button>
+            )}
           </Grid>
         </Grid>
       ))}

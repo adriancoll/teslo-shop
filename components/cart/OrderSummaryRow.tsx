@@ -4,7 +4,7 @@ import { FC } from 'react'
 
 interface Props {
   title: string
-  content: any
+  content: string
   variant?: Variant | 'inherit'
   containerSX?: SxProps<Theme>
 }

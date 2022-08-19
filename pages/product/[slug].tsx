@@ -1,11 +1,16 @@
+import { GetStaticPaths, NextPage, GetStaticProps } from 'next'
+
 import { Box, Button, Grid, Typography } from '@mui/material'
 
-import { GetServerSideProps, NextPage } from 'next'
-import { IProducts } from '../../interfaces'
 import { ShopLayout } from '../../components/layouts'
 import { ProductSizeSelector, SlideShow } from '../../components/products'
 import { ProductItemCounter } from '../../components/ui'
-import { getProductBySlug } from '../../database/dbProducts'
+
+import { IProducts } from '../../interfaces'
+import {
+  getAllProductsSlugs,
+  getProductBySlug
+} from '../../database/dbProducts'
 
 interface Props {
   product: IProducts
@@ -56,22 +61,63 @@ const ProductDetailPage: NextPage<Props> = ({ product }) => (
   </ShopLayout>
 )
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const { slug = '' } = params as { slug: string }
+// No usar SSR!!!!!
+
+// export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+//   const { slug = '' } = params as { slug: string }
+
+//   const product = await getProductBySlug(slug)
+
+//   if (!product) {
+//     return {
+//       redirect: '/',
+//       permanent: false
+//     }
+//   }
+
+//   return {
+//     props: {
+//       product
+//     }
+//   }
+// }
+
+// STATIC CONTENT
+
+export const getStaticPaths: GetStaticPaths = async ctx => {
+  const slugs = await getAllProductsSlugs()
+
+  const paths = slugs.map(({ slug }) => ({
+    params: { slug }
+  }))
+
+  console.log({ slugs })
+
+  return {
+    paths,
+    fallback: 'blocking'
+  }
+}
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const { slug } = params as { slug: string }
 
   const product = await getProductBySlug(slug)
 
   if (!product) {
     return {
-      redirect: '/',
-      permanent: false
+      redirect: {
+        destination: '/',
+        permanent: false
+      }
     }
   }
 
   return {
     props: {
       product
-    }
+    },
+    revalidate: 86400
   }
 }
 

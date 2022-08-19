@@ -2,7 +2,6 @@ import { FC, PropsWithChildren } from 'react'
 
 import Head from 'next/head'
 
-import { Navbar, SideMenu } from '../ui'
 import { Box } from '@mui/material'
 
 interface Props extends PropsWithChildren {

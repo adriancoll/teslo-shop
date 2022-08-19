@@ -1,6 +1,5 @@
 import mongoose, { model, Model, Schema } from 'mongoose'
 import { IProducts } from '../interfaces'
-import products from '../pages/api/products'
 
 const productSchema = new Schema(
   {

@@ -1,24 +1,39 @@
-@import "react-slideshow-image/dist/styles.css";
-
+@import 'react-slideshow-image/dist/styles.css';
 
 @keyframes fadeIn {
-  0% {opacity: 0;}
-  100% {opacity: 1;}
-} 
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 
 @-webkit-keyframes fadeIn {
-  0% {opacity: 0;}
-  100% {opacity: 1;}
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes fadeOut {
-  0% {opacity: 1;}
-  100% {opacity: 0;}
-} 
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
 
 @-webkit-keyframes fadeOut {
-  0% {opacity: 1;}
-  100% {opacity: 0;}
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 .fadeIn {
@@ -41,8 +56,6 @@
   animation-name: fadeOut;
 }
 
-
-
 .circular-btn {
   border-radius: 30px;
 }
@@ -50,7 +63,6 @@
 .circular-btn:hover {
   background-color: #274494;
 }
-
 
 .summary-card {
   border: 1px solid rgba(0, 0, 0, 0.1);
