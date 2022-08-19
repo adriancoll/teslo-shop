@@ -1,6 +1,4 @@
-import { createTheme } from '@mui/material/styles';
-import { red,  } from '@mui/material/colors';
-
+import { createTheme } from '@mui/material/styles'
 
 export const lightTheme = createTheme({
   palette: {
@@ -18,20 +16,20 @@ export const lightTheme = createTheme({
   components: {
     MuiLink: {
       defaultProps: {
-        underline: 'none',
-      },
+        underline: 'none'
+      }
     },
     MuiAppBar: {
       defaultProps: {
         elevation: 0,
-        position: 'fixed',
+        position: 'fixed'
       },
       styleOverrides: {
         root: {
           backgroundColor: 'white',
           height: 60,
           cursor: 'pointer'
-        },
+        }
       }
     },
 
@@ -52,7 +50,6 @@ export const lightTheme = createTheme({
       }
     },
 
-
     MuiButton: {
       defaultProps: {
         variant: 'contained',
@@ -65,15 +62,13 @@ export const lightTheme = createTheme({
           textTransform: 'none',
           boxShadow: 'none',
           borderRadius: 10,
-          ":hover": {
+          ':hover': {
             backgroundColor: 'rgba(0,0,0,0.05)',
             transition: 'all 0.3s ease-in-out'
           }
         }
       }
     },
-
-
     MuiCard: {
       defaultProps: {
         elevation: 0
@@ -81,10 +76,9 @@ export const lightTheme = createTheme({
       styleOverrides: {
         root: {
           boxShadow: '0px 5px 5px rgba(0,0,0,0.05)',
-          borderRadius: '10px',
+          borderRadius: '10px'
         }
       }
     }
-    
   }
-});
+})
