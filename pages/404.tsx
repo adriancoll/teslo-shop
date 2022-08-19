@@ -1,5 +1,5 @@
-import { Box, Typography } from "@mui/material";
-import { ShopLayout } from "../components/layouts";
+import { Box, Typography } from '@mui/material'
+import { ShopLayout } from '../components/layouts'
 
 // pages/404.tsx
 export default function Custom404() {
@@ -15,9 +15,9 @@ export default function Custom404() {
         height="calc(100vh - 200px)"
         sx={{
           flexDirection: {
-            xs: "column",
-            sm: "row",
-          },
+            xs: 'column',
+            sm: 'row'
+          }
         }}
       >
         <Typography variant="h1" component="h1" fontSize={100} fontWeight={200}>
@@ -26,5 +26,5 @@ export default function Custom404() {
         <Typography marginLeft={2}>No hemos encontrado nada!</Typography>
       </Box>
     </ShopLayout>
-  );
+  )
 }
