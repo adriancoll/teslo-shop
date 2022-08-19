@@ -12,6 +12,10 @@
 /.next/
 /out/
 
+#mongo
+/mongo
+.env
+
 # production
 /build
 
