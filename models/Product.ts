@@ -1,5 +1,6 @@
 import mongoose, { model, Model, Schema } from 'mongoose'
 import { IProducts } from '../interfaces'
+import products from '../pages/api/products'
 
 const productSchema = new Schema(
   {
@@ -43,6 +44,8 @@ const productSchema = new Schema(
 )
 
 // TODO: Crear indice de Mongo
+
+productSchema.index({ title: 'text', tags: 'text' })
 
 const Product: Model<IProducts> =
   mongoose.models.Product || model('Product', productSchema)

@@ -6,7 +6,7 @@ import { Product } from '../../../models'
 
 type ProductData = { product: IProducts } | { message: string }
 
-export default function (
+export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<ProductData>
 ) {
