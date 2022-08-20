@@ -9,3 +9,4 @@ export * from './constants'
 
 // dbProducts
 export * from './dbProducts'
+export * as dbProducts from './dbProducts'

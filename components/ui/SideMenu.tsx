@@ -56,6 +56,7 @@ export const SideMenu = () => {
         <List>
           <ListItem>
             <Input
+              autoFocus
               type="text"
               placeholder="Buscar..."
               onChange={ev => setSearchTerm(ev.target.value)}
@@ -64,7 +65,7 @@ export const SideMenu = () => {
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton aria-label="toggle password visibility">
-                    <SearchOutlined />
+                    <SearchOutlined onClick={onSearchTerm} />
                   </IconButton>
                 </InputAdornment>
               }

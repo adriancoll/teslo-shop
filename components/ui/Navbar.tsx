@@ -1,7 +1,11 @@
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 
-import { SearchOutlined, ShoppingCartOutlined } from '@mui/icons-material'
+import {
+  ClearOutlined,
+  SearchOutlined,
+  ShoppingCartOutlined
+} from '@mui/icons-material'
 
 import {
   Toolbar,
@@ -11,9 +15,12 @@ import {
   AppBar,
   Button,
   IconButton,
-  Badge
+  Badge,
+  toggleButtonClasses,
+  Input,
+  InputAdornment
 } from '@mui/material'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { UIContext } from '../../context/ui'
 
 const navRoutes = [
@@ -32,9 +39,17 @@ const navRoutes = [
 ]
 
 export const Navbar = () => {
-  const { asPath } = useRouter()
+  const { asPath, push } = useRouter()
 
   const { toggleMenu } = useContext(UIContext)
+
+  const [searchTerm, setSearchTerm] = useState('')
+  const [isSearchVisible, setIsSearchVisible] = useState(false)
+
+  const onSearchTerm = () => {
+    if (searchTerm.trim().length === 0) return
+    push(`/search/${searchTerm}`)
+  }
 
   return (
     <AppBar>
@@ -49,11 +64,14 @@ export const Navbar = () => {
         <Box sx={{ flex: 1 }} />
 
         <Box
+          className="fadeIn"
           sx={{
-            display: {
-              xs: 'none',
-              sm: 'block'
-            }
+            display: isSearchVisible
+              ? 'none'
+              : {
+                  xs: 'none',
+                  sm: 'block'
+                }
           }}
         >
           {navRoutes.map(({ slug, label }) => (
@@ -69,11 +87,62 @@ export const Navbar = () => {
 
         <Box sx={{ flex: 1 }} />
 
-        <IconButton>
+        {/* pantallas grandes */}
+        {isSearchVisible ? (
+          <Input
+            sx={{
+              display: {
+                xs: 'none',
+                sm: 'flex'
+              }
+            }}
+            autoFocus
+            className="fadeIn"
+            type="text"
+            placeholder="Buscar..."
+            onChange={ev => setSearchTerm(ev.target.value)}
+            onKeyPress={ev => (ev.key === 'Enter' ? onSearchTerm() : null)}
+            value={searchTerm}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setIsSearchVisible(false)}
+                  aria-label="toggle password visibility"
+                >
+                  <ClearOutlined />
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        ) : (
+          <IconButton
+            className="fadeIn"
+            sx={{
+              display: {
+                xs: 'none',
+                sm: 'block'
+              }
+            }}
+            onClick={() => setIsSearchVisible(true)}
+          >
+            <SearchOutlined />
+          </IconButton>
+        )}
+
+        {/* pantallas peques */}
+        <IconButton
+          onClick={toggleMenu}
+          sx={{
+            display: {
+              xs: 'flex',
+              sm: 'none'
+            }
+          }}
+        >
           <SearchOutlined />
         </IconButton>
 
-        <NextLink href="cart">
+        <NextLink href="/cart">
           <Link>
             <IconButton>
               <Badge badgeContent={2} color="secondary">
