@@ -16,7 +16,6 @@ export const getProductBySlug = async (
   return JSON.parse(JSON.stringify(product))
 }
 
-
 export const getAllProductsSlugs = async (): Promise<ProductSlug[]> => {
   await db.connect()
 
@@ -25,4 +24,18 @@ export const getAllProductsSlugs = async (): Promise<ProductSlug[]> => {
   await db.disconnect()
 
   return JSON.parse(JSON.stringify(slugs))
+}
+
+export const searchProducts = async (query: string): Promise<IProducts[]> => {
+  await db.connect()
+
+  const searchResults = await Product.find({
+    $text: { $search: query }
+  })
+    .select('title price sizes images description -_id')
+    .lean()
+
+  await db.disconnect()
+
+  return JSON.parse(JSON.stringify(searchResults))
 }

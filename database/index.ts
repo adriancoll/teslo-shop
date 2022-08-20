@@ -6,3 +6,6 @@ export * as seedDatabase from './products'
 
 // Constants
 export * from './constants'
+
+// dbProducts
+export * from './dbProducts'

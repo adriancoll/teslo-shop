@@ -1,6 +1,6 @@
 import { UIState } from './'
 
-type UIActionType = { type: 'UI - ToggleMenu' }
+type UIActionType = { type: 'UI - ToggleMenu' } | { type: 'UI - toggle searchbar'}
 
 export const uiReducer = (state: UIState, action: UIActionType): UIState => {
   switch (action.type) {
