@@ -1,14 +1,16 @@
+import { FC, useState, useEffect } from 'react'
+
 import { AddCircleOutline, RemoveCircleOutline } from '@mui/icons-material'
 import { Box, IconButton, Typography } from '@mui/material'
-import { FC, useState } from 'react'
 
 interface Props {
-  min?: number
   max?: number
+  currentValue: number
+  updatedQuantity: (quantity: number) => void
 }
 
-export const ProductItemCounter: FC<Props> = ({ min = 0, max = 1 }) => {
-  const [itemCount, setItemCount] = useState(0)
+export const ProductItemCounter: FC<Props> = ({ max = -1, currentValue, updatedQuantity }) => {
+  const [itemCount, setItemCount] = useState(currentValue)
 
   const add = () =>
     setItemCount(last => {
@@ -17,7 +19,12 @@ export const ProductItemCounter: FC<Props> = ({ min = 0, max = 1 }) => {
       return Math.min(last + 1, max)
     })
 
-  const substract = () => setItemCount(last => Math.max(last - 1, min))
+  const substract = () => setItemCount(last => Math.max(last - 1, 1))
+
+  useEffect(() => {
+    updatedQuantity(itemCount)
+  }, [itemCount])
+  
 
   return (
     <Box display="flex" alignItems="center">

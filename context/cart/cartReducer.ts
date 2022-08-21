@@ -10,8 +10,12 @@ type CartActionType =
       type: 'Cart - Add product'
       payload: ICartProduct
     }
+  | {
+      type: 'Cart - Update product'
+      payload: ICartProduct
+    }
 
-export const CartReducer = (
+export const cartReducer = (
   state: CartState,
   action: CartActionType
 ): CartState => {
@@ -19,10 +23,15 @@ export const CartReducer = (
     case 'Cart - Load cart from cookies | storage':
       return { ...state, cart: action.payload }
     case 'Cart - Add product':
-      return { 
-        ...state, 
-        cart: [...state.cart, action.payload] 
-    }
+      return {
+        ...state,
+        cart: [...state.cart, action.payload]
+      }
+    case: 'Cart - Update product':
+      return {
+        ...state,
+        cart:
+      }
     default:
       return state
   }

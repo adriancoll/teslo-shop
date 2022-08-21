@@ -1,86 +1,134 @@
+import { useContext, useState } from 'react'
+
 import { GetStaticPaths, NextPage, GetStaticProps } from 'next'
 
-import { Box, Button, Grid, Typography } from '@mui/material'
+import { Box, Button, Chip, Grid, Typography } from '@mui/material'
 
 import { ShopLayout } from '../../components/layouts'
 import { ProductSizeSelector, SlideShow } from '../../components/products'
 import { ProductItemCounter } from '../../components/ui'
 
-import { IProducts } from '../../interfaces'
+import { ICartProduct, IProducts, ISize } from '../../interfaces'
 import {
   getAllProductsSlugs,
   getProductBySlug
 } from '../../database/dbProducts'
+import { CartContext } from '../../context'
+
+import { useSnackbar } from 'notistack'
+import { useRouter } from 'next/router'
 
 interface Props {
   product: IProducts
 }
 
-const ProductDetailPage: NextPage<Props> = ({ product }) => (
-  <ShopLayout title={product.title} pageDescription={product.description}>
-    <Grid container spacing={3}>
-      <Grid item xs={12} sm={7}>
-        {/* slideshow */}
-        <SlideShow images={product.images} />
-      </Grid>
+const ProductDetailPage: NextPage<Props> = ({ product }) => {
+  const { enqueueSnackbar } = useSnackbar()
 
-      <Grid item xs={12} sm={5}>
-        <Box display="flex" flexDirection="column">
-          <Typography variant="h1" component="h1">
-            {product.title}
-          </Typography>
-          <Typography variant="subtitle1" component="h2">
-            {`$${product.price}`}
-          </Typography>
+  const router = useRouter()
 
-          {/* Cantidad */}
-          <Box sx={{ my: 2 }}>
-            <Typography variant="subtitle2">Cantidad</Typography>
-            <ProductItemCounter />
-            <ProductSizeSelector
-              selectedSize={product.sizes[0]}
-              sizes={product.sizes}
-            />
+  const { cart, addProductToCart } = useContext(CartContext)
+
+  const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
+    _id: product._id,
+    title: product.title,
+    images: product.images[0],
+    price: product.price,
+    size: undefined,
+    slug: product.slug,
+    type: product.type,
+    gender: product.gender,
+    quantity: 1
+  })
+
+  const handleSizeChange = (size: ISize) => {
+    setTempCartProduct(oldTempCartProduct => ({
+      ...oldTempCartProduct,
+      size
+    }))
+  }
+
+  const handleQuantityChange = (quantity: number) => {
+    setTempCartProduct(oldTempCartProduct => ({
+      ...oldTempCartProduct,
+      quantity
+    }))
+  }
+
+  const onAddProduct = () => {
+    if (!tempCartProduct.size) return
+
+    addProductToCart(tempCartProduct)
+    enqueueSnackbar(`${product.title} agregado al carrito`, {
+      variant: 'success'
+    })
+    router.push('/cart')
+  }
+
+  return (
+    <ShopLayout title={product.title} pageDescription={product.description}>
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={7}>
+          {/* slideshow */}
+          <SlideShow images={product.images} />
+        </Grid>
+
+        <Grid item xs={12} sm={5}>
+          <Box display="flex" flexDirection="column">
+            <Typography variant="h1" component="h1">
+              {product.title}
+            </Typography>
+            <Typography variant="subtitle1" component="h2">
+              {`$${product.price}`}
+            </Typography>
+
+            {/* Cantidad */}
+            <Box sx={{ my: 2 }}>
+              <Typography variant="subtitle2">Cantidad</Typography>
+              <ProductItemCounter
+                currentValue={tempCartProduct.quantity}
+                updatedQuantity={handleQuantityChange}
+                max={product.inStock > 10 ? 10 : product.inStock}
+              />
+              <h1>{product.inStock}</h1>
+              <ProductSizeSelector
+                sizes={product.sizes}
+                selectedSize={tempCartProduct.size}
+                onSizeChange={handleSizeChange}
+              />
+            </Box>
+
+            {/* Agregar al carrito */}
+            {product.inStock > 0 ? (
+              <Button
+                onClick={onAddProduct}
+                color="secondary"
+                className="circular-btn"
+                disabled={!tempCartProduct.size}
+              >
+                {tempCartProduct.size
+                  ? 'Agregar al carrito'
+                  : 'Selecciona una talla'}
+              </Button>
+            ) : (
+              <Chip
+                variant="outlined"
+                color="error"
+                label="No hay disponibles"
+              />
+            )}
+
+            {/* Descripcion */}
+            <Box sx={{ mt: 3 }}>
+              <Typography variant="subtitle2">Descripción:</Typography>
+              <Typography variant="body2">{product.description} </Typography>
+            </Box>
           </Box>
-
-          {/* Agregar al carrito */}
-          <Button color="secondary" className="circular-btn">
-            Agregar al carrito
-          </Button>
-
-          {/* <Chip variant="outlined" color="error" label="No hay disponibles" /> */}
-
-          {/* Descripcion */}
-          <Box sx={{ mt: 3 }}>
-            <Typography variant="subtitle2">Descripción:</Typography>
-            <Typography variant="body2">{product.description} </Typography>
-          </Box>
-        </Box>
+        </Grid>
       </Grid>
-    </Grid>
-  </ShopLayout>
-)
-
-// No usar SSR!!!!!
-
-// export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-//   const { slug = '' } = params as { slug: string }
-
-//   const product = await getProductBySlug(slug)
-
-//   if (!product) {
-//     return {
-//       redirect: '/',
-//       permanent: false
-//     }
-//   }
-
-//   return {
-//     props: {
-//       product
-//     }
-//   }
-// }
+    </ShopLayout>
+  )
+}
 
 // STATIC CONTENT
 

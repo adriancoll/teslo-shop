@@ -5,7 +5,7 @@ export interface ICartProduct {
   title: string
   images: string
   price: number 
-  size: ISize
+  size?: ISize
   slug: string
   type: IType
   gender: 'men' | 'women' | 'kid' | 'unisex'

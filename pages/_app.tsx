@@ -6,6 +6,8 @@ import { CssBaseline, ThemeProvider } from '@mui/material'
 
 import { lightTheme } from '../themes'
 import { UIProvider } from '../context/ui'
+import { CartProvider } from '../context'
+import { SnackbarProvider } from 'notistack'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -15,12 +17,16 @@ function MyApp({ Component, pageProps }: AppProps) {
           fetch(resource, init).then(res => res.json())
       }}
     >
-      <UIProvider>
-        <ThemeProvider theme={lightTheme}>
-          <CssBaseline />
-          <Component {...pageProps} />
-        </ThemeProvider>
-      </UIProvider>
+      <SnackbarProvider maxSnack={3}>
+        <CartProvider>
+          <UIProvider>
+            <ThemeProvider theme={lightTheme}>
+              <CssBaseline />
+              <Component {...pageProps} />
+            </ThemeProvider>
+          </UIProvider>
+        </CartProvider>
+      </SnackbarProvider>
     </SWRConfig>
   )
 }

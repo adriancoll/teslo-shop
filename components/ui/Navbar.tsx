@@ -22,6 +22,7 @@ import {
 } from '@mui/material'
 import { useContext, useState } from 'react'
 import { UIContext } from '../../context/ui'
+import { CartContext } from '../../context'
 
 const navRoutes = [
   {
@@ -40,6 +41,8 @@ const navRoutes = [
 
 export const Navbar = () => {
   const { asPath, push } = useRouter()
+
+  const { cart } = useContext(CartContext)
 
   const { toggleMenu } = useContext(UIContext)
 
@@ -145,7 +148,10 @@ export const Navbar = () => {
         <NextLink href="/cart">
           <Link>
             <IconButton>
-              <Badge badgeContent={2} color="secondary">
+              <Badge
+                badgeContent={cart.length > 9 ? '+9' : cart.length}
+                color="secondary"
+              >
                 <ShoppingCartOutlined />
               </Badge>
             </IconButton>

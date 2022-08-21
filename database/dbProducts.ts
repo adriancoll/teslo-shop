@@ -7,7 +7,7 @@ export const getProductBySlug = async (
 ): Promise<IProducts | null> => {
   await db.connect()
   const product = await Product.findOne({ slug })
-    .select('title price sizes images description -_id')
+    .select('title price sizes gender slug images inStock description -_id')
     .lean()
   await db.disconnect()
 
@@ -32,7 +32,7 @@ export const getProductsByTerm = async (term: string): Promise<IProducts[]> => {
   const searchResults = await Product.find({
     $text: { $search: term }
   })
-    .select('title price sizes images description -_id')
+    .select('title price sizes images inStock description -_id')
     .lean()
 
   await db.disconnect()
@@ -44,7 +44,7 @@ export const getAllProducts = async (): Promise<IProducts[]> => {
   await db.connect()
 
   const products = await Product.find()
-    .select('title price sizes images description -_id')
+    .select('title price sizes images inStock description -_id')
     .lean()
 
   await db.disconnect()
