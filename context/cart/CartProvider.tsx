@@ -1,6 +1,7 @@
 import { FC, PropsWithChildren, useReducer } from 'react'
+
 import { ICartProduct } from '../../interfaces'
-import products from '../../pages/api/products'
+
 import { CartContext } from './CartContext'
 import { cartReducer } from './cartReducer'
 
@@ -34,7 +35,7 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     dispatch({ type: 'Cart - Update product', payload })
 
   const removeProductFromCartById = (payload: ICartProduct) =>
-    dispatch({ type: 'Cart - remove product by id', payload })
+    dispatch({ type: 'Cart - remove product', payload })
 
   return (
     <CartContext.Provider

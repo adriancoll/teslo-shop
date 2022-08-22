@@ -23,7 +23,7 @@ const SearchPage: NextPage<Props> = ({ query, products, foundProducts }) => (
     </Typography>
 
     {foundProducts ? (
-      <Typography textTransform='capitalize' variant="h2" sx={{ mb: 1 }}>
+      <Typography textTransform="capitalize" variant="h2" sx={{ mb: 1 }}>
         Término : {query}
       </Typography>
     ) : (
@@ -50,7 +50,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       permanent: false
     }
   }
-  
+
   if (query.length === 0) return redirectObj
 
   let products = await dbProducts.getProductsByTerm(query)

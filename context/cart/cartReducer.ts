@@ -15,7 +15,7 @@ type CartActionType =
       payload: ICartProduct
     }
   | {
-      type: 'Cart - remove product by id'
+      type: 'Cart - remove product'
       payload: ICartProduct
     }
 
@@ -43,18 +43,11 @@ export const cartReducer = (
             : oldProduct
         )
       }
-    case 'Cart - remove product by id':
-      console.log(
-        'remove',
-        state.cart.findIndex(
-          oldProduct =>
-            oldProduct._id === action.payload._id &&
-            oldProduct.size === action.payload.size
-        )
-      )
+    case 'Cart - remove product':
       return {
         ...state,
         cart: state.cart.splice(
+          // Gets the index of the product we want to remove
           state.cart.findIndex(
             oldProduct =>
               oldProduct._id === action.payload._id &&
