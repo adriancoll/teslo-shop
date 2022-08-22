@@ -14,7 +14,11 @@ const CART_INITIAL_STATE = {
 export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, CART_INITIAL_STATE)
 
-  const addProductToCart = (payload: ICartProduct) => dispatch({ type: 'Cart - Add product', payload });
+  const addProductToCart = (payload: ICartProduct) =>
+    dispatch({ type: 'Cart - Add product', payload })
+
+  const updateProductCart = (payload: ICartProduct) =>
+    dispatch({ type: 'Cart - Update product', payload })
 
   return (
     <CartContext.Provider
@@ -22,7 +26,8 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         ...state,
 
         // Methods
-        addProductToCart
+        addProductToCart,
+        updateProductCart
       }}
     >
       {children}

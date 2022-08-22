@@ -3,7 +3,7 @@ import { ISize, IType } from "./products.interface"
 export interface ICartProduct {
   _id: string
   title: string
-  images: string
+  image: string
   price: number 
   size?: ISize
   slug: string

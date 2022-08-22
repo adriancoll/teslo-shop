@@ -27,10 +27,14 @@ export const cartReducer = (
         ...state,
         cart: [...state.cart, action.payload]
       }
-    case: 'Cart - Update product':
+    case 'Cart - Update product':
       return {
         ...state,
-        cart:
+        // Map the cart and if the product is the same that we get from
+        // payload replace it on the same position
+        cart: state.cart.map(oldProduct =>
+          oldProduct._id === action.payload._id ? action.payload : oldProduct
+        )
       }
     default:
       return state
