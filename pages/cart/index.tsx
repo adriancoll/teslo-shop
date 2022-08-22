@@ -7,17 +7,23 @@ import {
   Grid,
   Typography
 } from '@mui/material'
-import React from 'react'
+import { useRouter } from 'next/router'
+import React, { useContext } from 'react'
 import { CartList, OrderSummary } from '../../components/cart'
 import { ShopLayout } from '../../components/layouts'
+import { CartContext } from '../../context'
 
 const CartPage = () => {
+  const { push } = useRouter()
+
+  const { cart } = useContext(CartContext)
+
   return (
     <ShopLayout
-      title="Carrito - 3"
+      title={`Carrito - ${cart.length}`}
       pageDescription="Carrito de compras de la tienda"
     >
-      <Typography variant="h1" component="h1">
+      <Typography variant="h1" component="h1" sx={{ mb: 3 }}>
         Carrito
       </Typography>
 
@@ -38,8 +44,13 @@ const CartPage = () => {
                   mt: 3
                 }}
               >
-                <Button color="secondary" className="circular-btn" fullWidth>
-                  Checkout
+                <Button
+                  onClick={() => push('/checkout/summary')}
+                  color="secondary"
+                  className="circular-btn"
+                  fullWidth
+                >
+                  Continuar
                 </Button>
               </Box>
             </CardContent>

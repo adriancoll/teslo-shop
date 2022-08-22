@@ -10,15 +10,20 @@ import {
   Link,
   Typography
 } from '@mui/material'
-import React from 'react'
+import React, { useContext } from 'react'
 import { CartList, OrderSummary } from '../../components/cart'
 import { ShopLayout } from '../../components/layouts'
+import { CartContext } from '../../context'
 
 const SummaryPage = () => {
+  const { cart } = useContext(CartContext)
+
+  const mutableItemString = cart.length > 1 ? 'productos' : 'producto'
+
   return (
     <ShopLayout title="Resumen de compra" pageDescription="Resumen de la orden">
-      <Typography variant="h1" component="h1">
-        Resumen de la orden
+      <Typography variant="h1" component="h1" sx={{ mb: 3 }}>
+        Resumen del pedido
       </Typography>
 
       <Grid container>
@@ -29,7 +34,9 @@ const SummaryPage = () => {
         <Grid item xs={12} sm={5}>
           <Card className="summary-card">
             <CardContent>
-              <Typography variant="h2">Resumen (3 productos)</Typography>
+              <Typography variant="h2">
+                Resumen ({cart.length} {mutableItemString})
+              </Typography>
 
               <Divider sx={{ my: 1 }} />
 
@@ -62,7 +69,7 @@ const SummaryPage = () => {
                 }}
               >
                 <Button color="secondary" className="circular-btn" fullWidth>
-                  Confirmar orden
+                  Confirmar pedido
                 </Button>
               </Box>
             </CardContent>

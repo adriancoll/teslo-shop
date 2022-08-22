@@ -30,6 +30,8 @@ export const CartItem: FC<Props> = ({ product, editable }) => {
 
   const handleRemove = () => removeProductFromCartById(product)
 
+  const mutableItemString = product.quantity > 1 ? 'productos' : 'producto'
+
   return (
     <Grid spacing={1} container sx={{ mb: 1 }}>
       <Grid item xs={3}>
@@ -62,7 +64,9 @@ export const CartItem: FC<Props> = ({ product, editable }) => {
               max={product.inStock > 10 ? 10 : product.inStock}
             />
           ) : (
-            <Typography variant="h5">3 items</Typography>
+            <Typography variant="h5">
+              {product.quantity} {mutableItemString}
+            </Typography>
           )}
         </Box>
       </Grid>
