@@ -45,19 +45,22 @@ export const cartReducer = (
       }
     case 'Cart - remove product by id':
       console.log(
-        state.cart,
-        state.cart.filter(
+        'remove',
+        state.cart.findIndex(
           oldProduct =>
-            oldProduct._id !== action.payload._id &&
-            oldProduct.size !== action.payload.size
+            oldProduct._id === action.payload._id &&
+            oldProduct.size === action.payload.size
         )
       )
       return {
         ...state,
-        cart: state.cart.filter(
-          oldProduct =>
-            oldProduct._id !== action.payload._id &&
-            oldProduct.size !== action.payload.size
+        cart: state.cart.splice(
+          state.cart.findIndex(
+            oldProduct =>
+              oldProduct._id === action.payload._id &&
+              oldProduct.size === action.payload.size
+          ),
+          1
         )
       }
     default:
