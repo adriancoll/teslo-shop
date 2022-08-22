@@ -21,11 +21,14 @@ interface Props {
 }
 
 export const CartItem: FC<Props> = ({ product, editable }) => {
-  const { updateProductCart } = useContext(CartContext)
+  const { updateProductCart, removeProductFromCartById } =
+    useContext(CartContext)
 
   const handleUpdateQuantity = (quantity: number) => {
     updateProductCart({ ...product, quantity })
   }
+
+  const handleRemove = () => removeProductFromCartById(product)
 
   return (
     <Grid spacing={1} container sx={{ mb: 1 }}>
@@ -48,7 +51,7 @@ export const CartItem: FC<Props> = ({ product, editable }) => {
         <Box display="flex" flexDirection="column">
           <Typography variant="body1">{product.title} </Typography>
           <Typography variant="body1">
-            Talla: <strong>M</strong>{' '}
+            Talla: <strong>{product.size}</strong>{' '}
           </Typography>
 
           {/* Condicional */}
@@ -56,6 +59,7 @@ export const CartItem: FC<Props> = ({ product, editable }) => {
             <ProductItemCounter
               currentValue={product.quantity}
               updatedQuantity={handleUpdateQuantity}
+              max={product.inStock > 10 ? 10 : product.inStock}
             />
           ) : (
             <Typography variant="h5">3 items</Typography>
@@ -70,10 +74,12 @@ export const CartItem: FC<Props> = ({ product, editable }) => {
         alignItems="center"
         flexDirection="column"
       >
-        <Typography variant="subtitle1">{`$${product.price}`}</Typography>
+        <Typography variant="subtitle1">{`$${
+          product.price * product.quantity
+        }`}</Typography>
 
         {editable && (
-          <Button variant="text" color="secondary">
+          <Button onClick={handleRemove} variant="text" color="secondary">
             Quitar
           </Button>
         )}

@@ -6,9 +6,7 @@ export const getProductBySlug = async (
   slug: string
 ): Promise<IProducts | null> => {
   await db.connect()
-  const product = await Product.findOne({ slug })
-    .select('title price sizes gender slug images inStock description -_id')
-    .lean()
+  const product = await Product.findOne({ slug }).lean()
   await db.disconnect()
 
   if (!product) return null

@@ -38,6 +38,7 @@ const ProductDetailPage: NextPage<Props> = ({ product }) => {
     slug: product.slug,
     type: product.type,
     gender: product.gender,
+    inStock: product.inStock,
     quantity: 1
   })
 
@@ -57,6 +58,7 @@ const ProductDetailPage: NextPage<Props> = ({ product }) => {
 
   const onAddProduct = () => {
     if (!tempCartProduct.size) return
+    console.log('onAddProduct', { tempCartProduct })
 
     addProductToCart(tempCartProduct)
     enqueueSnackbar(`${product.title} agregado al carrito`, {
@@ -90,7 +92,6 @@ const ProductDetailPage: NextPage<Props> = ({ product }) => {
                 updatedQuantity={handleQuantityChange}
                 max={product.inStock > 10 ? 10 : product.inStock}
               />
-              <h1>{product.inStock}</h1>
               <ProductSizeSelector
                 sizes={product.sizes}
                 selectedSize={tempCartProduct.size}

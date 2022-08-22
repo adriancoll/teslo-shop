@@ -1,14 +1,7 @@
-import {
-  Box,
-  CardActionArea,
-  CardMedia,
-  Grid,
-  Link,
-  Typography,
-  Button
-} from '@mui/material'
-import NextLink from 'next/link'
 import { FC, useContext } from 'react'
+
+import { Box } from '@mui/material'
+
 import { CartContext } from '../../context'
 
 import { CartItem } from './CartItem'
@@ -23,7 +16,7 @@ export const CartList: FC<Props> = ({ editable = false }) => {
   return (
     <Box>
       {cart.map(product => (
-        <CartItem editable={editable} product={product} key={product.slug} />
+        <CartItem editable={editable} product={product} key={product._id} />
       ))}
     </Box>
   )

@@ -14,6 +14,10 @@ type CartActionType =
       type: 'Cart - Update product'
       payload: ICartProduct
     }
+  | {
+      type: 'Cart - remove product by id'
+      payload: ICartProduct
+    }
 
 export const cartReducer = (
   state: CartState,
@@ -33,7 +37,27 @@ export const cartReducer = (
         // Map the cart and if the product is the same that we get from
         // payload replace it on the same position
         cart: state.cart.map(oldProduct =>
-          oldProduct._id === action.payload._id ? action.payload : oldProduct
+          oldProduct._id === action.payload._id &&
+          oldProduct.size === action.payload.size
+            ? action.payload
+            : oldProduct
+        )
+      }
+    case 'Cart - remove product by id':
+      console.log(
+        state.cart,
+        state.cart.filter(
+          oldProduct =>
+            oldProduct._id !== action.payload._id &&
+            oldProduct.size !== action.payload.size
+        )
+      )
+      return {
+        ...state,
+        cart: state.cart.filter(
+          oldProduct =>
+            oldProduct._id !== action.payload._id &&
+            oldProduct.size !== action.payload.size
         )
       }
     default:
