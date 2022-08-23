@@ -1,10 +1,10 @@
-import { FC, PropsWithChildren } from 'react'
+import { FC } from 'react'
 
 import Head from 'next/head'
 
 import { Navbar, SideMenu } from '../ui'
 
-interface Props extends PropsWithChildren {
+interface Props {
   title: string
   pageDescription: string
   imageFullUrl?: string

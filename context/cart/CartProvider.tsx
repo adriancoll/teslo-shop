@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useEffect, useReducer } from 'react'
+import { FC, useEffect, useReducer } from 'react'
 import Cookie from 'js-cookie'
 
 import { ICartProduct } from '../../interfaces'
@@ -22,7 +22,7 @@ const CART_INITIAL_STATE = {
   total: 0
 }
 
-export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
+export const CartProvider: FC = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, CART_INITIAL_STATE)
 
   // Efecto
