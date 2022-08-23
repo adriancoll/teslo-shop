@@ -17,7 +17,7 @@ export interface AuthState {
 }
 
 const Auth_INITIAL_STATE: AuthState = {
-  isLoggedIn: true,
+  isLoggedIn: false,
   user: undefined
 }
 
@@ -80,9 +80,14 @@ export const AuthProvider: FC<Props> = ({ children }) => {
     }
   }
 
-  const logoutUser = () => dispatch({ type: 'Auth - logout' })
+  const logoutUser = () => {
+    Cookies.remove('token')
+    dispatch({ type: 'Auth - logout' })
+  }
 
   const checkToken = async () => {
+    if (!Cookies.get('token')) return
+
     try {
       const { data } = await userApi.post<ISuccessAuthResponse>(
         '/validate-token'
@@ -91,7 +96,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
       Cookies.set('token', token)
       dispatch({ type: 'Auth - login', payload: user })
     } catch (err) {
-      Cookies.remove('token')
+      logoutUser()
     }
   }
 

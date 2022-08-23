@@ -16,9 +16,14 @@ import { CartContext } from '../../context'
 const CartPage = () => {
   const { push } = useRouter()
 
-  const { cart } = useContext(CartContext)
+  const { numberOfItems } = useContext(CartContext)
 
-  const titleFormat = cart.length === 0 ? 'Vacío' : cart.length
+  const titleFormat =
+    numberOfItems === 0
+      ? 'Vacío'
+      : numberOfItems === 1
+      ? '1 producto'
+      : `${numberOfItems} productos`
 
   return (
     <ShopLayout

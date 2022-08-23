@@ -39,9 +39,12 @@ const LoginPage = () => {
 
     const isValid = await loginUser(email, password)
 
+    console.log({ isValid })
+
     if (!isValid) {
       setShowError(true)
       setTimeout(() => setShowError(false), 3000)
+      return
     }
 
     router.replace('/')
