@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 
 import NextLink from 'next/link'
 
@@ -13,6 +13,7 @@ import { UserRoles } from '../../interfaces'
 import { useSnackbar } from 'notistack'
 
 import NoAccountsOutlinedIcon from '@mui/icons-material/NoAccountsOutlined'
+import { AuthContext } from '../../context/auth'
 
 type FormData = {
   email: string
@@ -21,6 +22,8 @@ type FormData = {
 
 const LoginPage = () => {
   const { enqueueSnackbar } = useSnackbar()
+
+  const { isLoggedIn } = useContext(AuthContext)
 
   const [showError, setShowError] = useState(false)
 

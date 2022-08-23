@@ -5,8 +5,7 @@ import { SWRConfig } from 'swr'
 import { CssBaseline, ThemeProvider } from '@mui/material'
 
 import { lightTheme } from '../themes'
-import { UIProvider } from '../context/ui'
-import { CartProvider } from '../context'
+import { CartProvider, UIProvider, AuthProvider } from '../context'
 import { SnackbarProvider } from 'notistack'
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -18,14 +17,16 @@ function MyApp({ Component, pageProps }: AppProps) {
       }}
     >
       <SnackbarProvider maxSnack={3}>
-        <CartProvider>
-          <UIProvider>
-            <ThemeProvider theme={lightTheme}>
-              <CssBaseline />
-              <Component {...pageProps} />
-            </ThemeProvider>
-          </UIProvider>
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <UIProvider>
+              <ThemeProvider theme={lightTheme}>
+                <CssBaseline />
+                <Component {...pageProps} />
+              </ThemeProvider>
+            </UIProvider>
+          </CartProvider>
+        </AuthProvider>
       </SnackbarProvider>
     </SWRConfig>
   )
