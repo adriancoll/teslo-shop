@@ -1,58 +1,132 @@
+import { useState } from 'react'
+
 import NextLink from 'next/link'
 
-import { Button, Grid, Link, TextField, Typography } from '@mui/material'
+import { Button, Chip, Grid, Link, TextField, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 
 import { AuthLayout } from '../../components/layouts'
+import { useForm } from 'react-hook-form'
+import { validations } from '../../utils'
+import { userApi } from '../../services'
+import { UserRoles } from '../../interfaces'
+import { useSnackbar } from 'notistack'
+
+import NoAccountsOutlinedIcon from '@mui/icons-material/NoAccountsOutlined'
+
+type FormData = {
+  email: string
+  password: string
+}
 
 const LoginPage = () => {
+  const { enqueueSnackbar } = useSnackbar()
+
+  const [showError, setShowError] = useState(false)
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<FormData>()
+
+  const onSubmit = async ({ email, password }: FormData) => {
+    setShowError(false)
+    try {
+      const { data } = await userApi.post<{
+        token: string
+        user: {
+          email: string
+          name: string
+          role: UserRoles
+        }
+      }>('/login', { email, password })
+
+      const { token, user } = data
+
+      enqueueSnackbar(`Bienvenid@, ${user.name}`, { variant: 'success' })
+      console.log({ token, user })
+    } catch (err) {
+      setShowError(true)
+
+      setTimeout(() => setShowError(false), 3000)
+    }
+  }
+
   return (
     <AuthLayout
       title="Iniciar sesión"
       pageDescription="Iniciar sesión en Teslo Shop"
     >
-      <Box sx={{ width: 350, padding: '10px 20px' }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Typography variant="h1" component="h1">
-              Iniciar Sesión
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <TextField variant="filled" label="Correo" fullWidth />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              variant="filled"
-              type="password"
-              label="Contraseña"
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              color="secondary"
-              className="circular"
-              size="large"
-              fullWidth
-            >
-              Ingresar
-            </Button>
-          </Grid>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Box sx={{ width: 350, padding: '10px 20px' }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant="h1" component="h1">
+                Iniciar Sesión
+              </Typography>
+              {showError && (
+                <Chip
+                  label="No reconocemos ese usuario / contraseña"
+                  color="error"
+                  icon={<NoAccountsOutlinedIcon />}
+                  className="fadeIn"
+                />
+              )}
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="filled"
+                label="Correo"
+                fullWidth
+                {...register('email', {
+                  required: true,
+                  validate: validations.isEmail
+                })}
+                error={!!errors.email}
+                helperText={!!errors.email && errors.email.message}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="filled"
+                type="password"
+                label="Contraseña"
+                error={!!errors.password}
+                helperText={!!errors.password && errors.password.message}
+                fullWidth
+                {...register('password', {
+                  required: 'La contraseña no puede estar vacía',
+                  minLength: { value: 6, message: 'Mínimo 6 caracteres' }
+                })}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                color="secondary"
+                className="circular"
+                size="large"
+                fullWidth
+                type="submit"
+              >
+                Ingresar
+              </Button>
+            </Grid>
 
-          <Grid
-            item
-            xs={12}
-            display="flex"
-            justifyContent="end"
-            alignItems="center"
-          >
-            <NextLink href="/auth/register" passHref>
-              <Link underline="always">¿No tienes cuenta?</Link>
-            </NextLink>
+            <Grid
+              item
+              xs={12}
+              display="flex"
+              justifyContent="end"
+              alignItems="center"
+            >
+              <NextLink href="/auth/register" passHref>
+                <Link underline="always">¿No tienes cuenta?</Link>
+              </NextLink>
+            </Grid>
           </Grid>
-        </Grid>
-      </Box>
+        </Box>
+      </form>
     </AuthLayout>
   )
 }
