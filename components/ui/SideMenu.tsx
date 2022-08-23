@@ -136,7 +136,7 @@ export const SideMenu = () => {
               <ListItemText primary={'Salir'} />
             </ListItem>
           ) : (
-            <ListItem button onClick={() => navigateTo('/auth/login')}>
+            <ListItem button onClick={() => navigateTo(`/auth/login?p=${router.asPath}`)}>
               <ListItemIcon>
                 <VpnKeyOutlined />
               </ListItemIcon>
@@ -145,7 +145,7 @@ export const SideMenu = () => {
           )}
 
           {/* Admin */}
-          {user && user.role === 'admin' && (
+          {isLoggedIn && user && user.role === 'admin' && (
             <>
               <Divider />
               <ListSubheader>Admin Panel</ListSubheader>

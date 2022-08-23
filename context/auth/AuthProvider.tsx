@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import { FC, useEffect, useReducer } from 'react'
 
@@ -23,6 +24,8 @@ const Auth_INITIAL_STATE: AuthState = {
 
 export const AuthProvider: FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, Auth_INITIAL_STATE)
+
+  const router = useRouter()
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -82,7 +85,8 @@ export const AuthProvider: FC<Props> = ({ children }) => {
 
   const logoutUser = () => {
     Cookies.remove('token')
-    dispatch({ type: 'Auth - logout' })
+    Cookies.remove('cart')
+    router.reload()
   }
 
   const checkToken = async () => {
