@@ -20,7 +20,6 @@ import {
   FemaleOutlined,
   LoginOutlined,
   MaleOutlined,
-  NavigateNextSharp,
   SearchOutlined,
   VpnKeyOutlined
 } from '@mui/icons-material'
@@ -64,8 +63,11 @@ export const SideMenu = () => {
               value={searchTerm}
               endAdornment={
                 <InputAdornment position="end">
-                  <IconButton aria-label="toggle password visibility">
-                    <SearchOutlined onClick={onSearchTerm} />
+                  <IconButton
+                    onClick={onSearchTerm}
+                    aria-label="toggle password visibility"
+                  >
+                    <SearchOutlined />
                   </IconButton>
                 </InputAdornment>
               }
@@ -87,8 +89,8 @@ export const SideMenu = () => {
           </ListItem>
 
           <ListItem
-            onClick={() => navigateTo('/category/men')}
             button
+            onClick={() => navigateTo('/category/men')}
             sx={{ display: { xs: '', sm: 'none' } }}
           >
             <ListItemIcon>

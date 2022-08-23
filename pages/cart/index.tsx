@@ -18,9 +18,11 @@ const CartPage = () => {
 
   const { cart } = useContext(CartContext)
 
+  const titleFormat = cart.length === 0 ? 'Vacío' : cart.length
+
   return (
     <ShopLayout
-      title={`Carrito - ${cart.length}`}
+      title={`Carrito - ${titleFormat}`}
       pageDescription="Carrito de compras de la tienda"
     >
       <Typography variant="h1" component="h1" sx={{ mb: 3 }}>

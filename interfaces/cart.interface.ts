@@ -12,3 +12,10 @@ export interface ICartProduct {
   gender: 'men' | 'women' | 'kid' | 'unisex'
   quantity: number
 }
+
+export interface OrderSummary {
+  numberOfItems: number
+  subtotal: number
+  tax: number
+  total: number
+}

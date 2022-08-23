@@ -1,3 +1,4 @@
+import { useContext, useState } from 'react'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 
@@ -16,13 +17,10 @@ import {
   Button,
   IconButton,
   Badge,
-  toggleButtonClasses,
   Input,
   InputAdornment
 } from '@mui/material'
-import { useContext, useState } from 'react'
-import { UIContext } from '../../context/ui'
-import { CartContext } from '../../context'
+import { CartContext, UIContext } from '../../context'
 
 const navRoutes = [
   {
