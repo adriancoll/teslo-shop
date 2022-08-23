@@ -56,14 +56,9 @@ export const cartReducer = (
     case 'Cart - remove product':
       return {
         ...state,
-        cart: state.cart.splice(
-          // Gets the index of the product we want to remove
-          state.cart.findIndex(
-            oldProduct =>
-              oldProduct._id === action.payload._id &&
-              oldProduct.size === action.payload.size
-          ),
-          1
+        cart: state.cart.filter(
+          old =>
+            old._id != action.payload._id && old.size != action.payload.size
         )
       }
 
