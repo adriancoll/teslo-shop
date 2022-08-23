@@ -1,13 +1,22 @@
 import { createContext } from 'react'
-import { IUser } from '../../interfaces'
+import { IReducedUser, IUser } from '../../interfaces'
 
 export interface AuthContextProps {
   isLoggedIn: boolean
-  user?: IUser
+  user?: IReducedUser
 
   // Methods
-  loginUser: (payload: IUser) => void
-  registerUser: () => void
+  loginUser: (email: string, password: string) => Promise<boolean>
+  logoutUser: () => void
+  checkToken: () => void
+  registerUser: (
+    name: string,
+    email: string,
+    password: string
+  ) => Promise<{
+    hasError: boolean
+    message?: string
+  }>
 }
 
 export const AuthContext = createContext({} as AuthContextProps)

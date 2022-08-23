@@ -9,11 +9,12 @@ import { AuthLayout } from '../../components/layouts'
 import { useForm } from 'react-hook-form'
 import { validations } from '../../utils'
 import { userApi } from '../../services'
-import { UserRoles } from '../../interfaces'
+import { IUser, UserRoles } from '../../interfaces'
 import { useSnackbar } from 'notistack'
 
 import NoAccountsOutlinedIcon from '@mui/icons-material/NoAccountsOutlined'
 import { AuthContext } from '../../context/auth'
+import { useRouter } from 'next/router'
 
 type FormData = {
   email: string
@@ -21,9 +22,7 @@ type FormData = {
 }
 
 const LoginPage = () => {
-  const { enqueueSnackbar } = useSnackbar()
-
-  const { isLoggedIn } = useContext(AuthContext)
+  const { loginUser } = useContext(AuthContext)
 
   const [showError, setShowError] = useState(false)
 
@@ -33,27 +32,19 @@ const LoginPage = () => {
     formState: { errors }
   } = useForm<FormData>()
 
+  const router = useRouter()
+
   const onSubmit = async ({ email, password }: FormData) => {
     setShowError(false)
-    try {
-      const { data } = await userApi.post<{
-        token: string
-        user: {
-          email: string
-          name: string
-          role: UserRoles
-        }
-      }>('/login', { email, password })
 
-      const { token, user } = data
+    const isValid = await loginUser(email, password)
 
-      enqueueSnackbar(`Bienvenid@, ${user.name}`, { variant: 'success' })
-      console.log({ token, user })
-    } catch (err) {
+    if (!isValid) {
       setShowError(true)
-
       setTimeout(() => setShowError(false), 3000)
     }
+
+    router.replace('/')
   }
 
   return (

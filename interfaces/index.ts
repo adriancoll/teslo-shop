@@ -5,3 +5,5 @@ export * from './cart.interface'
 export * from './entity.interface'
 
 export * from './user.interface'
+
+export * from './auth.interface'

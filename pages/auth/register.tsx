@@ -11,13 +11,15 @@ import {
 } from '@mui/material'
 import { AuthLayout } from '../../components/layouts'
 import { useSnackbar } from 'notistack'
-import { useRef, useState } from 'react'
+import { useContext, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { userApi } from '../../services'
 import { UserRoles } from '../../interfaces'
 
 import NoAccountsOutlinedIcon from '@mui/icons-material/NoAccountsOutlined'
 import { validations } from '../../utils'
+import { AuthContext } from '../../context'
+import { useRouter } from 'next/router'
 
 type FormData = {
   name: string
@@ -27,9 +29,12 @@ type FormData = {
 }
 
 const RegisterPage = () => {
-  const { enqueueSnackbar } = useSnackbar()
-
   const [showError, setShowError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+
+  const { registerUser } = useContext(AuthContext)
+
+  const router = useRouter()
 
   const {
     register,
@@ -43,26 +48,16 @@ const RegisterPage = () => {
 
   const onRegisterForm = async ({ name, email, password }: FormData) => {
     setShowError(false)
-    try {
-      const { data } = await userApi.post<{
-        token: string
-        user: {
-          email: string
-          name: string
-          role: UserRoles
-        }
-      }>('/register', { email, password, name })
+    const { hasError, message } = await registerUser(name, email, password)
 
-      const { token, user } = data
-
-      enqueueSnackbar(`Cuenta creada correctamente, ${user.name}`, {
-        variant: 'success'
-      })
-    } catch ({ message }) {
+    if (hasError) {
       setShowError(true)
-
+      setErrorMessage(message!)
       setTimeout(() => setShowError(false), 3000)
+      return
     }
+
+    router.replace('/')
   }
 
   return (

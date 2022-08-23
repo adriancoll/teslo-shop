@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from 'bcryptjs'
 
 import { db } from '../../../database'
-import { UserRoles } from '../../../interfaces'
+import { ISuccessAuthResponse } from '../../../interfaces'
 import { User } from '../../../models'
 
 import { jwt, validations } from '../../../utils'
@@ -11,14 +11,7 @@ type Data =
   | {
       message: string
     }
-  | {
-      token: string
-      user: {
-        email: string
-        name: string
-        role: UserRoles
-      }
-    }
+  | ISuccessAuthResponse
 
 export default function handler(
   req: NextApiRequest,
