@@ -1,3 +1,5 @@
+import { UserRoles } from "../interfaces"
+
 interface SeedProduct {
   description: string
   images: string[]
@@ -16,9 +18,25 @@ type ValidTypes = 'shirts' | 'pants' | 'hoodies' | 'hats'
 
 interface SeedData {
   products: SeedProduct[]
+  users: SeedUser[]
+}
+
+interface SeedUser {
+  name: string
+  email: string
+  password: string
+  role: UserRoles
 }
 
 export const initialData: SeedData = {
+  users: [
+    {
+      name: 'Fernando Herrera',
+      email: 'fernando@google.com',
+      password: '123456',
+      role: 'admin'
+    }
+  ],
   products: [
     {
       description:

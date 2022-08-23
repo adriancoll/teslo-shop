@@ -2,7 +2,7 @@
 export * as db from './db'
 
 // Seeder
-export * as seedDatabase from './products'
+export * as seedDatabase from './seed-data'
 
 // Constants
 export * from './constants'
