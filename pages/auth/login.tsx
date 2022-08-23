@@ -50,6 +50,8 @@ const LoginPage = () => {
     const destination = router.query.p?.toString() || '/'
     router.replace(destination)
   }
+  
+  const registerURL = `/auth/register?p=${router.query.p?.toString()}` || '/auth/register'
 
   return (
     <AuthLayout
@@ -118,7 +120,7 @@ const LoginPage = () => {
               justifyContent="end"
               alignItems="center"
             >
-              <NextLink href="/auth/register" passHref>
+              <NextLink href={registerURL} passHref>
                 <Link underline="always">¿No tienes cuenta?</Link>
               </NextLink>
             </Grid>

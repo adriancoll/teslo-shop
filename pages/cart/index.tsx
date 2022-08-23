@@ -1,3 +1,9 @@
+import React, { useContext, useEffect } from 'react'
+
+import { useRouter } from 'next/router'
+
+import { CartContext, cartReducer } from '../../context'
+
 import {
   Box,
   Button,
@@ -7,16 +13,13 @@ import {
   Grid,
   Typography
 } from '@mui/material'
-import { useRouter } from 'next/router'
-import React, { useContext } from 'react'
 import { CartList, OrderSummary } from '../../components/cart'
 import { ShopLayout } from '../../components/layouts'
-import { CartContext } from '../../context'
+import { CartItem } from '../../components/cart/CartItem'
 
 const CartPage = () => {
-  const { push } = useRouter()
-
-  const { numberOfItems } = useContext(CartContext)
+  const { numberOfItems, isLoaded } = useContext(CartContext)
+  const { push, replace } = useRouter()
 
   const titleFormat =
     numberOfItems === 0
@@ -24,6 +27,14 @@ const CartPage = () => {
       : numberOfItems === 1
       ? '1 producto'
       : `${numberOfItems} productos`
+
+  useEffect(() => {
+    if (isLoaded && numberOfItems === 0) {
+      replace('/cart/empty')
+    }
+  }, [isLoaded, replace, numberOfItems])
+
+  if (!isLoaded || numberOfItems === 0) return (<></>)
 
   return (
     <ShopLayout
