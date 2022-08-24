@@ -13,6 +13,9 @@ export const isVaidToken = (token: string): Promise<string> => {
   if (!process.env.JWT_SECRET_SEED)
     throw new Error("JWT seed isn't provided in .env file!")
 
+
+    if (token.length < 10) return Promise.reject('JWT no es válido')
+
   return new Promise((resolve, reject) => {
     try {
       jwt.verify(token, process.env.JWT_SECRET_SEED || '', (err, payload) => {

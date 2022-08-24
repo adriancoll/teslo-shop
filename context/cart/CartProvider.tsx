@@ -5,6 +5,18 @@ import { ICartProduct } from '../../interfaces'
 
 import { CartContext } from './CartContext'
 import { cartReducer } from './cartReducer'
+import Cookies from 'js-cookie'
+
+export interface ShippingAddress {
+  firstName: string
+  lastName: string
+  address: string
+  address2?: string
+  zip: string
+  city: string
+  country: string
+  phone: string
+}
 
 export interface CartState {
   isLoaded: boolean
@@ -13,6 +25,7 @@ export interface CartState {
   subtotal: number
   tax: number
   total: number
+  shippingAddress: ShippingAddress
 }
 
 const CART_INITIAL_STATE = {
@@ -21,7 +34,8 @@ const CART_INITIAL_STATE = {
   numberOfItems: 0,
   subtotal: 0,
   tax: 0,
-  total: 0
+  total: 0,
+  shippingAddress: {} as ShippingAddress
 }
 
 export const CartProvider: FC = ({ children }) => {
@@ -46,6 +60,26 @@ export const CartProvider: FC = ({ children }) => {
   }, [])
 
   useEffect(() => {
+    if (Cookies.get('firstName')) {
+      const shippingAddress = {
+        firstName: Cookies.get('firstName') || '',
+        lastName: Cookies.get('lastName') || '',
+        address: Cookies.get('address') || '',
+        address2: Cookies.get('address2') || '',
+        zip: Cookies.get('zip') || '',
+        city: Cookies.get('city') || '',
+        country: Cookies.get('country') || '',
+        phone: Cookies.get('phone') || ''
+      }
+
+      dispatch({
+        type: 'Cart - Load address from cookies | storage',
+        payload: shippingAddress
+      })
+    }
+  }, [])
+
+  useEffect(() => {
     Cookie.set('cart', JSON.stringify(state.cart))
   }, [state.cart])
 
@@ -60,7 +94,7 @@ export const CartProvider: FC = ({ children }) => {
       0
     )
 
-    const taxRate = Number(process.env.NEXT_PUBLIC_RATE || 0)
+    const taxRate = Number(process.env.NEXT_PUBLIC_TAX_RATE || 0)
 
     const orderSummary = {
       numberOfItems,
@@ -93,6 +127,21 @@ export const CartProvider: FC = ({ children }) => {
   const removeProductFromCartById = (payload: ICartProduct) =>
     dispatch({ type: 'Cart - remove product', payload })
 
+  const updateShippingAddress = (payload: ShippingAddress) => {
+    Cookies.set('firstName', payload.firstName)
+    Cookies.set('lastName', payload.lastName)
+    Cookies.set('address', payload.address)
+    Cookies.set('address2', payload.address2 || '')
+    Cookies.set('zip', payload.zip)
+    Cookies.set('city', payload.city)
+    Cookies.set('country', payload.country)
+    Cookies.set('phone', payload.phone)
+
+    dispatch({
+      type: 'Cart - Update Address',
+      payload
+    })
+  }
   return (
     <CartContext.Provider
       value={{
@@ -101,7 +150,8 @@ export const CartProvider: FC = ({ children }) => {
         // Methods
         addProductToCart,
         updateProductCart,
-        removeProductFromCartById
+        removeProductFromCartById,
+        updateShippingAddress
       }}
     >
       {children}

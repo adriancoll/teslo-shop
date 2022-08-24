@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react'
 
 import { useRouter } from 'next/router'
 
-import { CartContext, cartReducer } from '../../context'
+import { CartContext } from '../../context'
 
 import {
   Box,
@@ -15,7 +15,6 @@ import {
 } from '@mui/material'
 import { CartList, OrderSummary } from '../../components/cart'
 import { ShopLayout } from '../../components/layouts'
-import { CartItem } from '../../components/cart/CartItem'
 
 const CartPage = () => {
   const { numberOfItems, isLoaded } = useContext(CartContext)
@@ -34,7 +33,7 @@ const CartPage = () => {
     }
   }, [isLoaded, replace, numberOfItems])
 
-  if (!isLoaded || numberOfItems === 0) return (<></>)
+  if (!isLoaded || numberOfItems === 0) return <></>
 
   return (
     <ShopLayout
@@ -63,7 +62,7 @@ const CartPage = () => {
                 }}
               >
                 <Button
-                  onClick={() => push('/checkout/summary')}
+                  href="/checkout/address"
                   color="secondary"
                   className="circular-btn"
                   fullWidth
