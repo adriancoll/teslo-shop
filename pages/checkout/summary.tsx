@@ -16,7 +16,7 @@ import { ShopLayout } from '../../components/layouts'
 import { CartContext } from '../../context'
 
 const SummaryPage = () => {
-  const { cart } = useContext(CartContext)
+  const { cart, shippingAddress } = useContext(CartContext)
 
   const mutableItemString = cart.length > 1 ? 'productos' : 'producto'
 
@@ -47,11 +47,13 @@ const SummaryPage = () => {
               </Box>
 
               <Typography variant="subtitle1">Dirección de entrega</Typography>
-              <Typography>Adrián coll suarez</Typography>
-              <Typography>123 avda</Typography>
-              <Typography>Patio 23 puerta 2</Typography>
-              <Typography>Valencia, España</Typography>
-              <Typography>+34 600 00 00 00</Typography>
+              <Typography>{`${shippingAddress.firstName} ${shippingAddress.lastName}`}</Typography>
+              <Typography>{shippingAddress.address}</Typography>
+              {shippingAddress.address2 && (
+                <Typography>{shippingAddress.address2}</Typography>
+              )}
+              <Typography>{shippingAddress.city}, {shippingAddress.country}</Typography>
+              <Typography>{shippingAddress.phone}</Typography>
 
               <Divider sx={{ my: 1 }} />
 
