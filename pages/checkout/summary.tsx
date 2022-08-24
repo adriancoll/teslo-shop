@@ -14,11 +14,15 @@ import React, { useContext } from 'react'
 import { CartList, OrderSummary } from '../../components/cart'
 import { ShopLayout } from '../../components/layouts'
 import { CartContext } from '../../context'
+import { countries } from '../../utils'
 
 const SummaryPage = () => {
   const { cart, shippingAddress } = useContext(CartContext)
 
   const mutableItemString = cart.length > 1 ? 'productos' : 'producto'
+
+  const { address, city, phone, firstName, lastName, country, zip, address2 } =
+    shippingAddress
 
   return (
     <ShopLayout title="Resumen de compra" pageDescription="Resumen de la orden">
@@ -47,13 +51,18 @@ const SummaryPage = () => {
               </Box>
 
               <Typography variant="subtitle1">Dirección de entrega</Typography>
-              <Typography>{`${shippingAddress.firstName} ${shippingAddress.lastName}`}</Typography>
-              <Typography>{shippingAddress.address}</Typography>
-              {shippingAddress.address2 && (
-                <Typography>{shippingAddress.address2}</Typography>
-              )}
-              <Typography>{shippingAddress.city}, {shippingAddress.country}</Typography>
-              <Typography>{shippingAddress.phone}</Typography>
+              <Typography>{`${firstName} ${lastName}`}</Typography>
+              <Typography>
+                {address}
+                {address2 ? `, ${address2}` : ''}{' '}
+              </Typography>
+              <Typography>
+                {city}, {zip}
+              </Typography>
+              <Typography>
+                {countries.find(c => c.code === country)?.name}
+              </Typography>
+              <Typography>{phone}</Typography>
 
               <Divider sx={{ my: 1 }} />
 

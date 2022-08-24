@@ -120,7 +120,7 @@ const AddressPage: NextPage = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
-              label="city"
+              label="Ciudad"
               variant="filled"
               fullWidth
               helperText={errors.city?.message}
