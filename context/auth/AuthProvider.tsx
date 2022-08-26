@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import { FC, useEffect, useReducer } from 'react'
@@ -24,10 +25,18 @@ const Auth_INITIAL_STATE: AuthState = {
 
 export const AuthProvider: FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, Auth_INITIAL_STATE)
+  const { data: session, status: sessionStatus } = useSession()
 
   const router = useRouter()
 
   const { enqueueSnackbar } = useSnackbar()
+
+  useEffect(() => {
+    if (sessionStatus === 'authenticated') {
+      // dispatch({ type: 'Auth - login', payload })
+      console.log({ user: session.user })
+    }
+  }, [session, sessionStatus])
 
   const loginUser = async (email: string, password: string) => {
     try {
@@ -104,9 +113,9 @@ export const AuthProvider: FC<Props> = ({ children }) => {
     }
   }
 
-  useEffect(() => {
-    checkToken()
-  }, [])
+  // useEffect(() => {
+  //   checkToken()
+  // }, [])
 
   return (
     <AuthContext.Provider
