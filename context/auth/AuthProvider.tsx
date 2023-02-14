@@ -7,6 +7,7 @@ import { FC, useEffect, useReducer } from 'react'
 import { AuthContext, authReducer } from '.'
 import { ISuccessAuthResponse, IReducedUser, IUser } from '../../interfaces'
 import { userApi } from '../../services'
+import { useSession } from 'next-auth/react'
 
 interface Props {
   children: JSX.Element | JSX.Element[]
@@ -24,10 +25,17 @@ const Auth_INITIAL_STATE: AuthState = {
 
 export const AuthProvider: FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, Auth_INITIAL_STATE)
-
   const router = useRouter()
+  const { data, status } = useSession()
 
   const { enqueueSnackbar } = useSnackbar()
+
+  useEffect(() => {
+    if (status !== 'authenticated') return
+
+    console.log({ user: data.user})
+    // dispatch({ type: 'Auth - login', payload: data?.user as IUser })
+  }, [status, data])
 
   const loginUser = async (email: string, password: string) => {
     try {
@@ -104,9 +112,9 @@ export const AuthProvider: FC<Props> = ({ children }) => {
     }
   }
 
-  useEffect(() => {
-    checkToken()
-  }, [])
+  // useEffect(() => {
+  //   checkToken()
+  // }, [])
 
   return (
     <AuthContext.Provider

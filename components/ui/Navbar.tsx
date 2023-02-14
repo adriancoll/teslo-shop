@@ -55,7 +55,7 @@ export const Navbar = () => {
   return (
     <AppBar>
       <Toolbar>
-        <NextLink passHref href="/">
+        <NextLink legacyBehavior passHref href="/">
           <Link display="flex" alignItems="center">
             <Typography variant="h6">Teslo |</Typography>
             <Typography sx={{ ml: 0.5 }}>Shop</Typography>
@@ -76,7 +76,7 @@ export const Navbar = () => {
           }}
         >
           {navRoutes.map(({ slug, label }) => (
-            <NextLink key={slug} passHref href={slug}>
+            <NextLink legacyBehavior key={slug} passHref href={slug}>
               <Link>
                 <Button color={asPath === slug ? 'primary' : 'info'}>
                   {label}
@@ -143,7 +143,7 @@ export const Navbar = () => {
           <SearchOutlined />
         </IconButton>
 
-        <NextLink href="/cart">
+        <NextLink legacyBehavior href="/cart">
           <Link>
             <IconButton>
               <Badge

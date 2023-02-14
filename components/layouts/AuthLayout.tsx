@@ -6,7 +6,7 @@ import { Box } from '@mui/material'
 
 interface Props {
   title: string
-  pageDescription: string
+  pageDescription?: string
   imageFullUrl?: string
 }
 

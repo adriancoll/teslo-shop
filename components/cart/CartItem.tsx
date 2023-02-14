@@ -36,7 +36,7 @@ export const CartItem: FC<Props> = ({ product, editable }) => {
     <Grid spacing={1} container sx={{ mb: 1 }}>
       <Grid item xs={3}>
         {/*  TODO: llevar a la página del producto */}
-        <NextLink href={`/product/${product.slug}`}>
+        <NextLink legacyBehavior href={`/product/${product.slug}`}>
           <Link>
             <CardActionArea>
               <CardMedia

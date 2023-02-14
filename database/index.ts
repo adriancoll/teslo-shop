@@ -10,3 +10,5 @@ export * from './constants'
 // dbProducts
 export * from './dbProducts'
 export * as dbProducts from './dbProducts'
+
+export * as dbUsers from './dbUsers'
