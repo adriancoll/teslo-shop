@@ -7,10 +7,13 @@ export interface IUser extends BaseEntity {
   email: string
   password: string
   role: UserRoles
+  provider: string
+  image?: string
 }
 
 export interface IReducedUser {
   email: string
   name: string
   role: UserRoles
+  image?: string
 }

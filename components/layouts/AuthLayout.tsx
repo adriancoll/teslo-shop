@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, PropsWithChildren } from 'react'
 
 import Head from 'next/head'
 
@@ -10,8 +10,8 @@ interface Props {
   imageFullUrl?: string
 }
 
-export const AuthLayout: FC<Props> = ({
-  title,
+export const AuthLayout: FC<Props & PropsWithChildren> = ({
+  title = '',
   pageDescription,
   imageFullUrl,
   children
@@ -19,7 +19,7 @@ export const AuthLayout: FC<Props> = ({
   return (
     <>
       <Head>
-        <title>Teslo - {title}</title>
+        <title>{title}</title>
         <meta name="description" content={pageDescription} />
 
         {/*  Open Graph metatags */}

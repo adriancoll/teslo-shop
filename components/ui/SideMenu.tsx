@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Box,
   Divider,
   Drawer,
@@ -81,7 +82,15 @@ export const SideMenu = () => {
             <>
               <ListItem button>
                 <ListItemIcon>
-                  <AccountCircleOutlined />
+                  {user.image ? (
+                    <Avatar
+                      sx={{ width: 32, height: 32 }}
+                      alt={`${user.name} avatar`}
+                      src={user.image}
+                    />
+                  ) : (
+                    <AccountCircleOutlined />
+                  )}
                 </ListItemIcon>
                 <ListItemText primary={'Perfil'} />
               </ListItem>
@@ -136,7 +145,10 @@ export const SideMenu = () => {
               <ListItemText primary={'Salir'} />
             </ListItem>
           ) : (
-            <ListItem button onClick={() => navigateTo(`/auth/login?p=${router.asPath}`)}>
+            <ListItem
+              button
+              onClick={() => navigateTo(`/auth/login?p=${router.asPath}`)}
+            >
               <ListItemIcon>
                 <VpnKeyOutlined />
               </ListItemIcon>

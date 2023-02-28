@@ -7,7 +7,7 @@ import { FC, useEffect, useReducer } from 'react'
 import { AuthContext, authReducer } from '.'
 import { ISuccessAuthResponse, IReducedUser, IUser } from '../../interfaces'
 import { userApi } from '../../services'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 
 interface Props {
   children: JSX.Element | JSX.Element[]
@@ -33,8 +33,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
   useEffect(() => {
     if (status !== 'authenticated') return
 
-    console.log({ user: data.user})
-    // dispatch({ type: 'Auth - login', payload: data?.user as IUser })
+    dispatch({ type: 'Auth - login', payload: data?.user as IUser })
   }, [status, data])
 
   const loginUser = async (email: string, password: string) => {
@@ -92,9 +91,23 @@ export const AuthProvider: FC<Props> = ({ children }) => {
   }
 
   const logoutUser = () => {
-    Cookies.remove('token')
     Cookies.remove('cart')
-    router.reload()
+    Cookies.remove('firstName')
+    Cookies.remove('lastName')
+    Cookies.remove('address')
+    Cookies.remove('address2')
+    Cookies.remove('zip')
+    Cookies.remove('city')
+    Cookies.remove('country')
+    Cookies.remove('phone')
+
+    signOut()
+
+    /**
+     * @deprecated NextAuth implemented 
+     */
+    //Cookies.remove('token')
+    //router.reload()
   }
 
   const checkToken = async () => {
@@ -111,10 +124,6 @@ export const AuthProvider: FC<Props> = ({ children }) => {
       logoutUser()
     }
   }
-
-  // useEffect(() => {
-  //   checkToken()
-  // }, [])
 
   return (
     <AuthContext.Provider

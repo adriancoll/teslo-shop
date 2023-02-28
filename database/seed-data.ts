@@ -27,6 +27,7 @@ interface SeedUser {
   email: string
   password: string
   role: UserRoles
+  provider?: string
 }
 
 export const initialData: SeedData = {
