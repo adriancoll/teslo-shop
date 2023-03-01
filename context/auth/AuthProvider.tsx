@@ -68,7 +68,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
       })
       const { token, user } = data
       Cookies.set('token', token)
-      enqueueSnackbar(`Cuenta creada correctamente, ${user.name}`, {
+      enqueueSnackbar(`Cuenta, ${user.name} creada correctamente!`, {
         variant: 'success'
       })
       dispatch({ type: 'Auth - login', payload: user })
@@ -104,7 +104,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
     signOut()
 
     /**
-     * @deprecated NextAuth implemented 
+     * @deprecated NextAuth implemented
      */
     //Cookies.remove('token')
     //router.reload()

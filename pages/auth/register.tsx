@@ -56,7 +56,7 @@ const RegisterPage = () => {
   }
 
   return (
-    <AuthLayout title={'Ingresar'}>
+    <AuthLayout title={'Teslo - Crear cuenta'}>
       <form onSubmit={handleSubmit(onRegisterForm)} noValidate>
         <Box sx={{ width: 350, padding: '10px 20px' }}>
           <Grid container spacing={2}>
