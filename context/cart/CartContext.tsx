@@ -1,22 +1,24 @@
-import { createContext } from 'react'
-import { ICartProduct } from '../../interfaces'
-import { ShippingAddress } from './CartProvider'
+import { createContext } from 'react';
+import { ShippingAddress } from './';
+import { ICartProduct } from '../../interfaces';
 
-export interface CartContextProps {
-  isLoaded: boolean
-  cart: ICartProduct[]
-  numberOfItems: number
-  subtotal: number
-  tax: number
-  total: number
 
-  shippingAddress: ShippingAddress
+interface ContextProps {
+    isLoaded: boolean;
+    cart: ICartProduct[];
+    numberOfItems: number;
+    subTotal: number;
+    tax: number;
+    total: number;
 
-  // methods
-  addProductToCart: (payload: ICartProduct) => void
-  updateProductCart: (payload: ICartProduct) => void
-  removeProductFromCartById: (payload: ICartProduct) => void
-  updateShippingAddress: (payload: ShippingAddress) => void
+    shippingAddress?: ShippingAddress,
+
+    // Methods
+    addProductToCart: (product: ICartProduct) => void;
+    updateCartQuantity: (product: ICartProduct) => void;
+    removeCartProduct: (product: ICartProduct) => void;
+    updateAddress: (address: ShippingAddress) => void;
 }
 
-export const CartContext = createContext({} as CartContextProps)
+
+export const CartContext = createContext({} as ContextProps );

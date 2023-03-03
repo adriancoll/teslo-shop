@@ -1,49 +1,56 @@
-import { FC, PropsWithChildren } from 'react'
+import { FC, PropsWithChildren } from 'react';
+import Head from 'next/head';
 
-import Head from 'next/head'
+import { Navbar, SideMenu } from '../ui';
 
-import { Navbar, SideMenu } from '../ui'
 
 interface Props extends PropsWithChildren {
-  title: string
-  pageDescription: string
-  imageFullUrl?: string
+    title: string;
+    pageDescription: string;
+    imageFullUrl?: string;
 }
 
-export const ShopLayout: FC<Props> = ({
-  title,
-  pageDescription,
-  imageFullUrl,
-  children
-}) => {
+export const ShopLayout:FC<Props> = ({ children, title, pageDescription, imageFullUrl }) => {
   return (
     <>
-      <Head>
-        <title>{title}</title>
-        <meta name="description" content={pageDescription} />
+        <Head>
+            <title>{ title }</title>
 
-        {/*  Open Graph metatags */}
-        <meta property="og:title" content={title} />
-        <meta property="og:descrition" content={pageDescription} />
+            <meta name="description" content={ pageDescription } />
+            
+            
+            <meta name="og:title" content={ title } />
+            <meta name="og:description" content={ pageDescription } />
 
-        {imageFullUrl && <meta property="og:image" content={imageFullUrl} />}
+            {
+                imageFullUrl && (
+                    <meta name="og:image" content={ imageFullUrl } />
+                )
+            }
 
-        {/* <meta property="og:url" content={'/'} /> */}
-      </Head>
+        </Head> 
 
-      <nav>
-        <Navbar />
-      </nav>
+        <nav>
+            <Navbar />
+        </nav>
 
-      <SideMenu />
+        <SideMenu />
 
-      <main
-        style={{ margin: '80px auto', maxWidth: '1440px', padding: '0 40px' }}
-      >
-        {children}
-      </main>
+        <main style={{
+            margin: '80px auto',
+            maxWidth: '1440px',
+            padding: '0px 30px'
+        }}>
+            { children }
+        </main>
 
-      <footer>{/* footer */}</footer>
+        {/* Footer */}
+        <footer>
+            {/* TODO: mi custom footer */}
+        </footer>
+
     </>
   )
 }
+
+

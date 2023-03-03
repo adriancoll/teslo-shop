@@ -1,9 +1,10 @@
 import NextLink from 'next/link';
 
 import { Typography, Grid, Chip, Link } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 
 import { ShopLayout } from '../../components/layouts';
+
 
 
 const columns: GridColDef[] = [
@@ -15,7 +16,7 @@ const columns: GridColDef[] = [
         headerName: 'Pagada',
         description: 'Muestra información si está pagada la orden o no',
         width: 200,
-        renderCell: (params) => {
+        renderCell: (params: GridValueGetterParams) => {
             return (
                 params.row.paid
                     ? <Chip color="success" label="Pagada" variant='outlined' />
@@ -28,9 +29,9 @@ const columns: GridColDef[] = [
         headerName: 'Ver orden',
         width: 200,
         sortable: false,
-        renderCell: (params) => {
+        renderCell: (params: GridValueGetterParams) => {
             return (
-               <NextLink legacyBehavior href={`/orders/${ params.row.id }`} passHref>
+               <NextLink href={`/orders/${ params.row.id }`} passHref legacyBehavior>
                     <Link underline='always'>
                         Ver orden
                     </Link>

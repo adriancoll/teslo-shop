@@ -1,42 +1,40 @@
-import { FC, useState, useEffect } from 'react'
+import { FC } from 'react';
+import { Box, IconButton, Typography } from '@mui/material';
+import { AddCircleOutline, RemoveCircleOutline } from '@mui/icons-material';
 
-import { AddCircleOutline, RemoveCircleOutline } from '@mui/icons-material'
-import { Box, IconButton, Typography } from '@mui/material'
 
 interface Props {
-  max?: number
-  currentValue: number
-  updatedQuantity: (quantity: number) => void
+  currentValue: number;
+  maxValue: number;
+
+  // Methods
+  updatedQuantity: (newValue: number) => void;
 }
 
-export const ProductItemCounter: FC<Props> = ({ max = -1, currentValue, updatedQuantity }) => {
-  const [itemCount, setItemCount] = useState(currentValue)
+export const ItemCounter:FC<Props> = ({ currentValue, updatedQuantity, maxValue }) => {
 
-  const add = () =>
-    setItemCount(last => {
-      if (max < 0) return last + 1
+  const addOrRemove = ( value: number ) => {
+    if ( value === -1 ) {
+      if ( currentValue === 1 ) return;
 
-      return Math.min(last + 1, max)
-    })
+      return updatedQuantity( currentValue - 1);
+    }
 
-  const substract = () => setItemCount(last => Math.max(last - 1, 1))
+    if ( currentValue >= maxValue ) return;
 
-  useEffect(() => {
-    updatedQuantity(itemCount)
-  }, [itemCount])
+    updatedQuantity( currentValue + 1 );
+  }
   
 
   return (
-    <Box display="flex" alignItems="center">
-      <IconButton onClick={substract}>
-        <RemoveCircleOutline />
-      </IconButton>
-      <Typography sx={{ width: 40, textAlign: 'center' }}>
-        {itemCount}
-      </Typography>
-      <IconButton onClick={add}>
-        <AddCircleOutline />
-      </IconButton>
+    <Box display='flex' alignItems='center'>
+        <IconButton onClick={ () => addOrRemove(-1) }>
+            <RemoveCircleOutline />
+        </IconButton>
+        <Typography sx={{ width: 40, textAlign:'center' }}> {currentValue} </Typography>
+        <IconButton onClick={ () => addOrRemove(+1) }>
+            <AddCircleOutline />
+        </IconButton>
     </Box>
   )
 }

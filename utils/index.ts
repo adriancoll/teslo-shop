@@ -1,11 +1,7 @@
-// Currency
-export * as currency from './currency'
 
-// JWT
-export * as jwt from './jwt'
 
-// Validations
-export * as validations from './validations'
+export * as currency from './currency';
+export * as jwt from './jwt';
+export * as validations from './validations';
 
-// Countries
-export * from './countries'
+export * from './countries';

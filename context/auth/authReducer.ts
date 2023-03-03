@@ -1,28 +1,32 @@
-import { AuthState } from '.'
-import { IReducedUser } from '../../interfaces'
+import { AuthState } from './';
+import { IUser } from '../../interfaces';
 
-type AuthActionType =
-  | { type: 'Auth - login'; payload: IReducedUser }
-  | { type: 'Auth - logout' }
 
-export const authReducer = (
-  state: AuthState,
-  action: AuthActionType
-): AuthState => {
-  switch (action.type) {
-    case 'Auth - login':
-      return {
-        ...state,
-        user: action.payload,
-        isLoggedIn: true
-      }
-    case 'Auth - logout':
-      return {
-        ...state,
-        user: undefined,
-        isLoggedIn: false
-      }
-    default:
-      return state
-  }
+type AuthActionType = 
+   | { type: '[Auth] - Login', payload: IUser } 
+   | { type: '[Auth] - Logout' } 
+
+
+export const authReducer = ( state: AuthState, action: AuthActionType ): AuthState => {
+
+   switch (action.type) {
+        case '[Auth] - Login':
+            return {
+                ...state,
+                isLoggedIn: true,
+                user: action.payload
+            }
+
+        case '[Auth] - Logout':
+            return {
+                ...state,
+                isLoggedIn: false,
+                user: undefined,
+            }
+
+
+       default:
+          return state;
+   }
+
 }

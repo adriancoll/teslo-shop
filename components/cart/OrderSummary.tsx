@@ -1,38 +1,45 @@
-import { useContext } from 'react'
+import { useContext } from 'react';
+import { Grid, Typography } from '@mui/material';
+import { CartContext } from '../../context/cart/CartContext';
+import { currency } from '../../utils';
+import { useCart } from '../../hooks';
 
-import { Grid } from '@mui/material'
-import { CartContext } from '../../context'
-import { OrderSummaryRow } from './OrderSummaryRow'
-import { currency } from '../../utils'
 
 export const OrderSummary = () => {
-  const { numberOfItems, subtotal, total, tax } = useContext(CartContext)
 
-  const mutableItemsString = numberOfItems !== 1 ? 'productos' : 'producto'
-
+    const { numberOfItems, subTotal, total, tax } = useCart();
+    
   return (
     <Grid container>
-      <OrderSummaryRow
-        title="No. Products"
-        content={`${numberOfItems} ${mutableItemsString}`}
-      />
+        
+        <Grid item xs={6}>
+            <Typography>No. Productos</Typography>
+        </Grid>
+        <Grid item xs={6} display='flex' justifyContent='end'>
+            <Typography>{numberOfItems} { numberOfItems > 1 ? 'productos': 'producto' }</Typography>
+        </Grid>
 
-      <OrderSummaryRow
-        title="Subtotal"
-        content={`${currency.format(subtotal)}`}
-      />
+        <Grid item xs={6}>
+            <Typography>SubTotal</Typography>
+        </Grid>
+        <Grid item xs={6} display='flex' justifyContent='end'>
+            <Typography>{ currency.format(subTotal) }</Typography>
+        </Grid>
 
-      <OrderSummaryRow
-        title={`Impuestos (${Number(process.env.NEXT_PUBLIC_TAX_RATE) * 100}%)`}
-        content={`${currency.format(tax)}`}
-      />
+        <Grid item xs={6}>
+            <Typography>Impuestos ({ Number(process.env.NEXT_PUBLIC_TAX_RATE) * 100 }%)</Typography>
+        </Grid>
+        <Grid item xs={6} display='flex' justifyContent='end'>
+            <Typography>{ currency.format(tax) }</Typography>
+        </Grid>
 
-      <OrderSummaryRow
-        title="Total:"
-        content={`${currency.format(total)}`}
-        variant="subtitle1"
-        containerSX={{ mt: 2 }}
-      />
+        <Grid item xs={6} sx={{ mt:2 }}>
+            <Typography variant="subtitle1">Total:</Typography>
+        </Grid>
+        <Grid item xs={6} sx={{ mt:2 }} display='flex' justifyContent='end'>
+            <Typography variant="subtitle1">{ currency.format(total) }</Typography>
+        </Grid>
+
     </Grid>
   )
 }

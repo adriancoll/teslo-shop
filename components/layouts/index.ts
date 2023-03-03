@@ -1,5 +1,6 @@
-// Auth
-export * from './AuthLayout'
 
-// Shop
-export * from './ShopLayout'
+
+
+export * from './ShopLayout';
+export * from './AuthLayout';
+

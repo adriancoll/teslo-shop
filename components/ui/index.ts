@@ -1,11 +1,6 @@
-// Navbar
-export * from './Navbar'
 
-// SideMenu
-export * from './SideMenu'
 
-// ItemCounter
-export * from './ItemCounter'
-
-// FScreenLoading
-export * from './FullScreenLoading'
+export * from './FullScreenLoading';
+export * from './ItemCounter';
+export * from './Navbar';
+export * from './SideMenu';

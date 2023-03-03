@@ -1,9 +1,5 @@
-export * from './products.interface'
 
-export * from './cart.interface'
 
-export * from './entity.interface'
-
-export * from './user.interface'
-
-export * from './auth.interface'
+export * from './cart';
+export * from './products';
+export * from './user';

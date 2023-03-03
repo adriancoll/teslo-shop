@@ -1,70 +1,83 @@
-import { GetServerSideProps, NextPage } from 'next'
+import type { NextPage, GetServerSideProps } from 'next';
+import { Typography,Box } from '@mui/material';
 
-import { Box, Typography } from '@mui/material'
+import { ShopLayout } from '../../components/layouts';
 
-import { ShopLayout } from '../../components/layouts'
-import { ProductList } from '../../components/products'
-import { dbProducts } from '../../database'
-import { IProducts } from '../../interfaces'
+import { ProductList } from '../../components/products';
+
+import { dbProducts } from '../../database';
+import { IProduct } from '../../interfaces';
+
 
 interface Props {
-  query: string
-  products: IProducts[]
-  foundProducts: boolean
+    products: IProduct[];
+    foundProducts: boolean;
+    query: string;
 }
 
-const SearchPage: NextPage<Props> = ({ query, products, foundProducts }) => (
-  <ShopLayout
-    title="Teslo-Shop - Home"
-    pageDescription="Encuentra los mejores productos de Teslo aquí"
-  >
-    <Typography variant="h1" component="h1">
-      Buscar producto
-    </Typography>
 
-    {foundProducts ? (
-      <Typography textTransform="capitalize" variant="h2" sx={{ mb: 1 }}>
-        Término : {query}
-      </Typography>
-    ) : (
-      <Box display="flex">
-        <Typography variant="h2" sx={{ mb: 1 }}>
-          No encontramos ningún producto
-        </Typography>
-        <Typography variant="h2" color="secondary" sx={{ ml: 1 }}>
-          {query}
-        </Typography>
-      </Box>
-    )}
+const SearchPage: NextPage<Props> = ({ products, foundProducts, query }) => {
 
-    <ProductList products={products} />
-  </ShopLayout>
-)
 
+  return (
+    <ShopLayout title={'Teslo-Shop - Search'} pageDescription={'Encuentra los mejores productos de Teslo aquí'}>
+        <Typography variant='h1' component='h1'>Buscar productos</Typography>
+
+        {
+            foundProducts 
+                ? <Typography variant='h2' sx={{ mb: 1 }} textTransform="capitalize">Término: { query }</Typography>
+                : (
+                    <Box display='flex'>
+                        <Typography variant='h2' sx={{ mb: 1 }}>No encontramos ningún produto</Typography>
+                        <Typography variant='h2' sx={{ ml: 1 }} color="secondary" textTransform="capitalize">{ query }</Typography>
+                    </Box>
+                )
+        }
+
+        
+
+        
+        <ProductList products={ products } />
+        
+    </ShopLayout>
+  )
+}
+
+
+
+// You should use getServerSideProps when:
+// - Only if you need to pre-render a page whose data must be fetched at request time
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const { query = '' } = params as { query: string }
+    
+    const { query = '' } = params as { query: string };
 
-  const redirectObj = {
-    redirect: {
-      destination: '/',
-      permanent: false
+    if ( query.length === 0 ) {
+        return {
+            redirect: {
+                destination: '/',
+                permanent: true
+            }
+        }
     }
-  }
 
-  if (query.length === 0) return redirectObj
+    // y no hay productos
+    let products = await dbProducts.getProductsByTerm( query );
+    const foundProducts = products.length > 0;
 
-  let products = await dbProducts.getProductsByTerm(query)
-  const foundProducts = products.length > 0
-
-  if (!foundProducts) products = await dbProducts.getAllProducts()
-
-  return {
-    props: {
-      query,
-      products,
-      foundProducts
+    // TODO: retornar otros productos
+    if ( !foundProducts ) {
+        // products = await dbProducts.getAllProducts(); 
+        products = await dbProducts.getProductsByTerm('shirt');
     }
-  }
+
+    return {
+        props: {
+            products,
+            foundProducts,
+            query
+        }
+    }
 }
+
 
 export default SearchPage

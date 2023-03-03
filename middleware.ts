@@ -7,11 +7,12 @@ const LOGIN_URL = '/auth/login'
 export async function middleware(req: NextRequest) {
   const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
 
-  console.log('[middleware] - ', { session })
+  // console.log('[middleware] - ', { session })
 
   if (!session) {
     /** @example {String} /checkout/address */
     const requestedPage = req.nextUrl.pathname
+
     const url = req.nextUrl.clone()
 
     url.pathname = LOGIN_URL

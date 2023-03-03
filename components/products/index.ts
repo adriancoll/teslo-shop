@@ -1,11 +1,4 @@
-// Product List
-export * from './ProductList'
-
-// Product Card
-export * from './ProductCard'
-
-// SlideShow
-export * from './ProductSlideShow'
-
-// ProductSizeSelector
-export * from './ProductSizeSelector'
+export * from './ProductCard';
+export * from './ProductList';
+export * from './ProductSlideshow';
+export * from './SizeSelector';

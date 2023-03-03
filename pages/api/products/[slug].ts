@@ -1,37 +1,41 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { db } from '../../../database';
+import { Product } from '../../../models';
+import { IProduct } from '../../../interfaces';
 
-import { db } from '../../../database'
-import { IProducts } from '../../../interfaces'
-import { Product } from '../../../models'
+type Data = 
+| { message: string }
+| IProduct;
 
-type ProductData = { product: IProducts } | { message: string }
+export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
+    
+    
+    switch( req.method ) {
+        case 'GET':
+            return getProductBySlug(req, res);
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<ProductData>
-) {
-  switch (req.method) {
-    case 'GET':
-      return getProductBySlug(req, res)
-    default:
-      return res.status(400).json({ message: 'Método no encontrado' })
-  }
+        default:
+            return res.status(400).json({
+                message: 'Bad request'
+            })
+    }
+
 }
 
-const getProductBySlug = async (
-  req: NextApiRequest,
-  res: NextApiResponse<ProductData>
-) => {
-  const { slug } = req.query as { slug: string }
+async function getProductBySlug(req: NextApiRequest, res: NextApiResponse<Data>) {
 
-  await db.connect()
+    await db.connect();
+    const { slug } = req.query;
+    const product = await Product.findOne({ slug }).lean();
+    await db.disconnect();
 
-  const product: IProducts = await Product.findOne({ slug: slug.trim() }).lean()
+    if( !product ) {
+        return res.status(404).json({
+            message: 'Producto no encontrado'
+        })
+    }
 
-  await db.disconnect()
+    return res.json( product );
 
-  if (!product)
-    return res.status(404).json({ message: 'Producto no encontrado' })
 
-  res.status(200).json({ product })
 }

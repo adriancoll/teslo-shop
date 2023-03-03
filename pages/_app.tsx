@@ -1,36 +1,34 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+import '../styles/globals.css';
+import type { AppProps } from 'next/app';
+import { SessionProvider } from "next-auth/react"
 
-import { SWRConfig } from 'swr'
-import { CssBaseline, ThemeProvider } from '@mui/material'
-import { SessionProvider } from 'next-auth/react'
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import { SWRConfig } from 'swr';
 
-import { lightTheme } from '../themes'
-import { CartProvider, UIProvider, AuthProvider } from '../context'
-import { SnackbarProvider } from 'notistack'
+import { lightTheme } from '../themes';
+import { AuthProvider, CartProvider, UiProvider } from '../context';
 
-function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <SessionProvider session={session}>
-      <SWRConfig
+    <SessionProvider>
+    
+      <SWRConfig 
         value={{
-          fetcher: (resource, init) =>
-            fetch(resource, init).then(res => res.json())
+          fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
         }}
       >
-        <SnackbarProvider maxSnack={3}>
-          <AuthProvider>
-            <CartProvider>
-              <UIProvider>
-                <ThemeProvider theme={lightTheme}>
+        <AuthProvider>
+          <CartProvider>
+            <UiProvider>
+              <ThemeProvider theme={ lightTheme}>
                   <CssBaseline />
                   <Component {...pageProps} />
-                </ThemeProvider>
-              </UIProvider>
-            </CartProvider>
-          </AuthProvider>
-        </SnackbarProvider>
+              </ThemeProvider>
+            </UiProvider>
+          </CartProvider>
+        </AuthProvider>
       </SWRConfig>
+      
     </SessionProvider>
   )
 }

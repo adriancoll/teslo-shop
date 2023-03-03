@@ -1,63 +1,53 @@
-import bcrypt from 'bcryptjs'
+import bcrypt from 'bcryptjs';
 
-import { db } from '.'
-import { User } from '../models'
-import { userAgent } from 'next/server'
-import { ProviderType } from 'next-auth/providers'
+import { User } from '../models';
+import { db } from './';
 
-export const checkUserEmailPassword = async (
-  email: string,
-  password: string
-) => {
-  await db.connect()
-  const user = await User.findOne({ email })
-  await db.disconnect()
 
-  if (!user) {
-    return null
-  }
 
-  if (!bcrypt.compareSync(password, user.password)) return null
+export const checkUserEmailPassword = async( email: string, password: string ) => {
 
-  const { role, name, _id, image } = user
+    await db.connect();
+    const user = await User.findOne({ email });
+    await db.disconnect();
 
-  console.log({ user });
+    if ( !user ) {
+        return null;
+    }
 
-  return { role, name, _id, image: image || '' }
+    if ( !bcrypt.compareSync( password, user.password! ) ) {
+        return null;
+    }
+
+    const { role, name, _id } = user;
+
+    return {
+        _id,
+        email: email.toLocaleLowerCase(),
+        role,
+        name,
+    }
 }
 
-/**
- * Creates user by oauth providers
- * @param oAuthEmail
- */
-export const createOAuthUser = async (
-  oAuthEmail: string,
-  oAuthName: string,
-  provider = 'credentials',
-  profileImage: string
-) => {
-  await db.connect()
-  const userInDB = await User.findOne({ email: oAuthEmail })
 
-  if (userInDB) {
-    await db.disconnect()
-    const { name, _id, email, image } = userInDB
-    return { name, _id, email, image }
-  }
+// Esta función crea o verifica el usuario de OAuth
+export const oAUthToDbUser = async( oAuthEmail: string, oAuthName: string ) => {
 
-  const newUser = new User({
-    email: oAuthEmail,
-    password: 'oauth-user',
-    name: oAuthName,
-    role: 'client',
-    image: profileImage,
-    provider
-  })
+    await db.connect();
+    const user = await User.findOne({ email: oAuthEmail });
 
-  await newUser.save()
-  await db.disconnect()
+    if ( user ) {
+        await db.disconnect();
+        const { _id, name, email, role } = user;
+        return { _id, name, email, role };
+    }
 
-  const { name, _id, email, image } = newUser
+    const newUser = new User({ email: oAuthEmail, name: oAuthName, password: '@', role: 'client'  });
+    await newUser.save();
+    await db.disconnect();
 
-  return { name, _id, email, image }
+    const { _id, name, email, role } = newUser;
+    return { _id, name, email, role };
+
 }
+

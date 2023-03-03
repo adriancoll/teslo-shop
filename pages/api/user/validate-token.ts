@@ -1,69 +1,68 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-import bcrypt from 'bcryptjs'
+import type { NextApiRequest, NextApiResponse } from 'next';
+import bcrypt from 'bcryptjs';
 
-import { db } from '../../../database'
-import { UserRoles } from '../../../interfaces'
+import { db } from '../../../database';
+import { User } from '../../../models';
+import { jwt } from '../../../utils';
 
-import { jwt } from '../../../utils'
-import { User } from '../../../models'
-
-type Data =
-  | {
-      message: string
+type Data = 
+| { message: string }
+| {
+    token: string;
+    user: {
+        email: string;
+        name: string;
+        role: string;
     }
-  | {
-      token: string
-    }
-  | {
-      token: string
-      user: {
-        email: string
-        name: string
-        role: UserRoles
-      }
-    }
-
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  switch (req.method) {
-    case 'POST':
-      validateToken(req, res)
-      break
-
-    default:
-      return res.status(400).json({ message: 'Bad request' })
-  }
 }
 
-const validateToken = async (
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) => {
-  const { token = '' } = req.cookies
+export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
+    
+    switch( req.method ) {
+        case 'GET':
+            return checkJWT(req, res)
 
-  if (!token)
-    return res.status(400).json({ message: 'No se ha encontrado ningún token' })
+        default:
+            res.status(400).json({
+                message: 'Bad request'
+            })
+    }
+}
 
-  let userId = ''
+const checkJWT = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
+    
+    const { token = ''  } = req.cookies;
 
-  try {
-    userId = await jwt.isVaidToken(token)
-  } catch (err) {
-    return res.status(400).json({ message: 'El token no es válido' })
-  }
+    let userId = '';
 
-  await db.connect()
-  const userFound = await User.findById(userId).lean()
-  await db.disconnect()
+    try {
+        userId = await jwt.isValidToken( token );
 
-  if (!userFound)
-    return res.status(400).json({ message: 'El usuario no existe' })
+    } catch (error) {
+        return res.status(401).json({
+            message: 'Token de autorización no es válido'
+        })   
+    }
 
-  const { _id, email, name, role   } = userFound
 
-  const newToken = jwt.signToken(_id, email)
+    await db.connect();
+    const user = await User.findById( userId ).lean();
+    await db.disconnect();
 
-  return res.status(200).json({ token: newToken, user: { role, name, email } })
+    if ( !user ) {
+        return res.status(400).json({ message: 'No existe usuario con ese id' })
+    }
+
+    const { _id, email, role, name } = user;
+
+    return res.status(200).json({
+        token: jwt.signToken( _id, email ),
+        user: {
+            email, 
+            role, 
+            name
+        }
+    })
+
+
 }

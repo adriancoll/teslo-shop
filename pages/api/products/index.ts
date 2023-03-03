@@ -1,40 +1,42 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { db, SHOP_CONSTANTS } from '../../../database'
-import { IProducts } from '../../../interfaces'
 import { Product } from '../../../models'
+import { IProduct } from '../../../interfaces/products';
 
-type ProductsData = IProducts[] | { message: string }
+type Data = 
+| { message: string }
+| IProduct[]
 
-export default function (
-  req: NextApiRequest,
-  res: NextApiResponse<ProductsData>
-) {
-  switch (req.method) {
-    case 'GET':
-      return getAllProducts(req, res)
+export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
 
-    default:
-      return res.json({ message: 'Método no encontrado' })
-  }
+    switch( req.method ) {
+        case 'GET':
+            return getProducts( req, res )
+
+        default:
+            return res.status(400).json({
+                message: 'Bad request'
+            })
+    }
 }
 
-const getAllProducts = async (
-  req: NextApiRequest,
-  res: NextApiResponse<ProductsData>
-) => {
-  const { gender = 'all' } = req.query
+const getProducts = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
+    
+    const { gender = 'all' } = req.query;
 
-  let condition = {}
+    let condition = {};
 
-  if (gender !== 'all' && SHOP_CONSTANTS.validGenders.includes(`${gender}`)) {
-    condition = { gender }
-  }
+    if ( gender !== 'all' && SHOP_CONSTANTS.validGenders.includes(`${gender}`) ) {
+        condition = { gender };
+    }
 
-  await db.connect()
-  const products = await Product.find(condition)
-    .select('title images price inStock slug -_id')
-    .lean()
+    await db.connect();
+    const products = await Product.find(condition)
+                                .select('title images price inStock slug -_id')
+                                .lean();
 
-  await db.disconnect()
-  return res.status(200).json(products)
+    await db.disconnect();
+
+    return res.status(200).json( products );
+
 }

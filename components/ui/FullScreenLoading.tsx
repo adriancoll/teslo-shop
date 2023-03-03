@@ -3,17 +3,15 @@ import React from 'react'
 
 export const FullScreenLoading = () => {
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      height="calc(100vh - 200px)"
-      flexDirection="column"
+    <Box 
+        display='flex' 
+        flexDirection='column'
+        justifyContent='center' 
+        alignItems='center' 
+        height='calc(100vh - 200px)'
     >
-      <Typography sx={{ mb: 3 }} variant="h2" fontWeight={200} fontSize={20}>
-        Cargando...
-      </Typography>
-      <CircularProgress thickness={2} />
+        <Typography sx={{ mb: 3 }} variant="h2" fontWeight={ 200 } fontSize={ 20 }>Cargando...</Typography>
+        <CircularProgress thickness={ 2 } />
     </Box>
   )
 }
