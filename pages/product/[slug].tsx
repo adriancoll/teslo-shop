@@ -16,7 +16,7 @@ import { ProductSlideshow, SizeSelector } from '../../components/products'
 import { ItemCounter } from '../../components/ui/ItemCounter'
 
 import { dbProducts } from '../../database'
-import { IProduct, ICartProduct, ISize } from '../../interfaces'
+import { IProduct, ICartProduct, TSize } from '../../interfaces'
 import { useCart } from '../../hooks'
 
 interface Props {
@@ -38,7 +38,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
     quantity: 1
   })
 
-  const selectedSize = (size: ISize) => {
+  const selectedSize = (size: TSize) => {
     setTempCartProduct(currentProduct => ({
       ...currentProduct,
       size

@@ -1,8 +1,10 @@
 import { FC, PropsWithChildren, useEffect, useReducer } from 'react'
 import Cookie from 'js-cookie'
 
-import { ICartProduct } from '../../interfaces'
+import { ICartProduct, IOrder, TShippingAddress } from '../../interfaces'
 import { CartContext, cartReducer } from './'
+import { tesloApi } from '../../api'
+import axios from 'axios'
 
 export interface CartState {
   isLoaded: boolean
@@ -12,21 +14,10 @@ export interface CartState {
   tax: number
   total: number
 
-  shippingAddress?: ShippingAddress
+  shippingAddress?: TShippingAddress
 }
 
-export interface ShippingAddress {
-  firstName: string
-  lastName: string
-  address: string
-  address2?: string
-  zip: string
-  city: string
-  country: string
-  phone: string
-}
-
-const CART_INITIAL_STATE: CartState = {
+export const CART_INITIAL_STATE: CartState = {
   isLoaded: false,
   cart: [],
   numberOfItems: 0,
@@ -39,7 +30,7 @@ const CART_INITIAL_STATE: CartState = {
 export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, CART_INITIAL_STATE)
 
-  // Efecto
+  // Load cart from cookies
   useEffect(() => {
     try {
       const cookieProducts = Cookie.get('cart')
@@ -57,6 +48,7 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     }
   }, [])
 
+  // Load address from cookies
   useEffect(() => {
     if (Cookie.get('firstName')) {
       const shippingAddress = {
@@ -83,15 +75,18 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     Cookie.set('cart', JSON.stringify(state.cart), { expires: 86400 })
   }, [state.cart])
 
+  // Price logics effect
   useEffect(() => {
     const numberOfItems = state.cart.reduce(
       (prev, current) => current.quantity + prev,
       0
     )
+
     const subTotal = state.cart.reduce(
       (prev, current) => current.price * current.quantity + prev,
       0
     )
+
     const taxRate = Number(process.env.NEXT_PUBLIC_TAX_RATE || 0)
 
     const orderSummary = {
@@ -153,7 +148,7 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     dispatch({ type: '[Cart] - Remove product in cart', payload: product })
   }
 
-  const updateAddress = (address: ShippingAddress) => {
+  const updateAddress = (address: TShippingAddress) => {
     Cookie.set('firstName', address.firstName)
     Cookie.set('lastName', address.lastName)
     Cookie.set('address', address.address)
@@ -166,6 +161,40 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     dispatch({ type: '[Cart] - Update Address', payload: address })
   }
 
+  /**
+   * Create's order Rest API
+   * @alias /orders
+   */
+  const createOrder = async (): Promise<{
+    hasError: boolean
+    message: string
+  }> => {
+    try {
+      const body: IOrder = {
+        orderItems: state.cart.map(p => ({ ...p, size: p.size! })),
+        shippingAddress: state.shippingAddress!,
+        numberOfItems: state.numberOfItems,
+        isPaid: false,
+        total: state.total,
+        subTotal: state.subTotal,
+        tax: state.tax
+      }
+
+      const { data } = await tesloApi.post<IOrder>('/orders', body)
+
+      dispatch({ type: '[Cart] - Order complete' })
+
+      return { hasError: false, message: data._id! }
+    } catch (error) {
+      return {
+        hasError: true,
+        message: axios.isAxiosError(error)
+          ? error.response?.data.message
+          : 'Error no controlado'
+      }
+    }
+  }
+
   return (
     <CartContext.Provider
       value={{
@@ -175,7 +204,10 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         addProductToCart,
         removeCartProduct,
         updateCartQuantity,
-        updateAddress
+        updateAddress,
+
+        // Orders
+        createOrder
       }}
     >
       {children}
