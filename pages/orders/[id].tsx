@@ -1,5 +1,6 @@
 import { GetServerSideProps, NextPage } from 'next'
 import NextLink from 'next/link'
+import { getSession } from 'next-auth/react'
 
 import {
   Link,
@@ -8,16 +9,14 @@ import {
   CardContent,
   Divider,
   Grid,
-  Typography,
-  Chip
+  Typography
 } from '@mui/material'
-import { CreditCardOffOutlined, CreditScoreOutlined } from '@mui/icons-material'
+
+import { PayPalButtons } from '@paypal/react-paypal-js'
 
 import { ShopLayout } from '../../components/layouts/ShopLayout'
 import { CartList, OrderSummary } from '../../components/cart'
 import { AddressSummary } from '../../components/cart'
-import { getSession } from 'next-auth/react'
-import { getOrderById } from '../../database/dbOrders'
 import { dbOrders } from '../../database'
 import { IOrder } from '../../interfaces'
 import { OrderStatusChip } from '../../components/orders'
@@ -52,7 +51,7 @@ const OrderPage: NextPage<Props> = ({ order }) => {
 
       <OrderStatusChip isPaid={isPaid} />
 
-      <Grid container className='fadeIn'>
+      <Grid container className="fadeIn">
         <Grid item xs={12} sm={7}>
           <CartList editable={false} products={order.orderItems} />
         </Grid>
@@ -87,7 +86,29 @@ const OrderPage: NextPage<Props> = ({ order }) => {
               <Box sx={{ mt: 3 }} display="flex" flexDirection="column">
                 {/* TODO */}
 
-                {isPaid ? <OrderStatusChip isPaid={isPaid} /> : <h1>Pagar</h1>}
+                {isPaid ? (
+                  <OrderStatusChip isPaid={isPaid} />
+                ) : (
+                  <PayPalButtons
+
+                    createOrder={(data, actions) => {
+                      return actions.order.create({
+                        purchase_units: [
+                          {
+                            amount: {
+                              value: order.total.toString()
+                            }
+                          }
+                        ]
+                      })
+                    }}
+                    onApprove={(data, actions) => {
+                      return actions.order!.capture().then(details => {
+                        const name = details.payer.name!.given_name
+                      })
+                    }}
+                  />
+                )}
               </Box>
             </CardContent>
           </Card>

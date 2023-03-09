@@ -1,4 +1,4 @@
-import { FC, useReducer, useEffect } from 'react'
+import { FC, useReducer, useEffect, PropsWithChildren } from 'react'
 import { useRouter } from 'next/router'
 import { useSession, signOut } from 'next-auth/react'
 
@@ -20,7 +20,7 @@ const AUTH_INITIAL_STATE: AuthState = {
   user: undefined
 }
 
-export const AuthProvider: FC = ({ children }) => {
+export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE)
   const { data, status } = useSession()
   const router = useRouter()
