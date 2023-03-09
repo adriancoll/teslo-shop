@@ -9,7 +9,8 @@ import {
   CardContent,
   Divider,
   Grid,
-  Typography
+  Typography,
+  CircularProgress
 } from '@mui/material'
 
 import { PayPalButtons } from '@paypal/react-paypal-js'
@@ -20,13 +21,21 @@ import { AddressSummary } from '../../components/cart'
 import { dbOrders } from '../../database'
 import { IOrder } from '../../interfaces'
 import { OrderStatusChip } from '../../components/orders'
+import { IPaypal } from '../../interfaces'
+import { tesloApi } from '../../api'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
 
 interface Props {
   order: IOrder
 }
 
 const OrderPage: NextPage<Props> = ({ order }) => {
-  const {
+  const router = useRouter()
+
+  const [isPaying, setIsPaying] = useState(false)
+
+  let {
     isPaid,
     numberOfItems,
     orderItems,
@@ -34,19 +43,39 @@ const OrderPage: NextPage<Props> = ({ order }) => {
     subTotal,
     tax,
     total,
-    _id: OrderId,
+    _id: orderId,
     paidAt,
     paymentResult,
     user
   } = order
 
+  const onOrderCompleted = async (details: IPaypal.OrderResponseBody) => {
+    if (details.status !== 'COMPLETED') {
+      return alert('No hay pago en Paypal')
+    }
+
+    setIsPaying(true)
+
+    try {
+      await tesloApi.post<{ message: string }>('/orders/pay', {
+        transactionId: details.id,
+        orderId: orderId
+      })
+
+      router.reload()
+    } catch (error) {
+      setIsPaying(false)
+      console.error(error)
+    }
+  }
+
   return (
     <ShopLayout
-      title={`Resumen de la orden ${OrderId}`}
+      title={`Resumen de la orden ${orderId}`}
       pageDescription={'Resumen de la orden'}
     >
       <Typography variant="h1" component="h1">
-        Orden: {OrderId}
+        Orden: {orderId}
       </Typography>
 
       <OrderStatusChip isPaid={isPaid} />
@@ -86,29 +115,39 @@ const OrderPage: NextPage<Props> = ({ order }) => {
               <Box sx={{ mt: 3 }} display="flex" flexDirection="column">
                 {/* TODO */}
 
-                {isPaid ? (
-                  <OrderStatusChip isPaid={isPaid} />
-                ) : (
-                  <PayPalButtons
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  className="fadeIn"
+                  sx={{
+                    display: isPaying ? 'flex' : 'none'
+                  }}
+                >
+                  <CircularProgress />
+                </Box>
 
-                    createOrder={(data, actions) => {
-                      return actions.order.create({
-                        purchase_units: [
-                          {
-                            amount: {
-                              value: order.total.toString()
+                <Box flexDirection='column' sx={{ display: isPaying ? 'none' : 'flex', flex: 1 }}>
+                  {isPaid ? (
+                    <OrderStatusChip isPaid={isPaid} />
+                  ) : (
+                    <PayPalButtons
+                      createOrder={(data, actions) => {
+                        return actions.order.create({
+                          purchase_units: [
+                            {
+                              amount: {
+                                value: order.total.toString()
+                              }
                             }
-                          }
-                        ]
-                      })
-                    }}
-                    onApprove={(data, actions) => {
-                      return actions.order!.capture().then(details => {
-                        const name = details.payer.name!.given_name
-                      })
-                    }}
-                  />
-                )}
+                          ]
+                        })
+                      }}
+                      onApprove={(data, actions) => {
+                        return actions.order!.capture().then(onOrderCompleted)
+                      }}
+                    />
+                  )}
+                </Box>
               </Box>
             </CardContent>
           </Card>
