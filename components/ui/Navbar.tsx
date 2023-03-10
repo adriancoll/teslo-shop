@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { AppBar, Badge, Box, Button, IconButton, Input, InputAdornment, Link, Toolbar, Typography } from '@mui/material';
 import { ClearOutlined, SearchOutlined, ShoppingCartOutlined } from '@mui/icons-material';
 
-import { CartContext, UiContext } from '../../context';
+import { UiContext } from '../../context';
 import { useCart } from '../../hooks';
 
 export const Navbar = () => {

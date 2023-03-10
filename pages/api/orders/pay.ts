@@ -71,7 +71,6 @@ const payOrder = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Database: Order validations
 
-
   // Validate MongoId
   if (!isValidObjectId(orderId))
     return res.status(400).json({ message: 'ID No válido!' })
@@ -112,6 +111,7 @@ const payOrder = async (req: NextApiRequest, res: NextApiResponse) => {
   // At this point everything is good
   dbOrder.transactionId = data.id
   dbOrder.isPaid = true
+  dbOrder.paidAt = new Date().toString()
 
   await dbOrder.save()
   await db.disconnect()
