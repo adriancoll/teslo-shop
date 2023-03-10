@@ -7,7 +7,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { ShopLayout } from '../../components/layouts'
 import { getSession } from 'next-auth/react'
 import { dbOrders } from '../../database'
-import { IOrder } from '../../interfaces'
+import { IOrder, THistoryOrder } from '../../interfaces'
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 100 },
@@ -39,56 +39,38 @@ const columns: GridColDef[] = [
   }
 ]
 
-type THistoryOrder = {
-  id: number
-  orderId: string
-  paid: boolean
-  fullname: string
-}
-
 interface Props {
-  orders: IOrder[]
+  orders: THistoryOrder[]
 }
 
-const HistoryPage: NextPage<Props> = ({ orders }) => {
-  const rows: THistoryOrder[] = orders.map(
-    ({ _id, isPaid, shippingAddress }, idx) => ({
-      id: 1 + idx,
-      orderId: _id!,
-      paid: isPaid,
-      fullname: `${shippingAddress.firstName} ${shippingAddress.lastName}`
-    })
-  )
+const HistoryPage: NextPage<Props> = ({ orders }) => (
+  <ShopLayout
+    title={'Historial de ordenes'}
+    pageDescription={'Historial de ordenes del cliente'}
+  >
+    <Typography variant="h1" component="h1">
+      Historial de ordenes
+    </Typography>
 
-  return (
-    <ShopLayout
-      title={'Historial de ordenes'}
-      pageDescription={'Historial de ordenes del cliente'}
-    >
-      <Typography variant="h1" component="h1">
-        Historial de ordenes
-      </Typography>
-
-      <Grid container className='fadeIn'>
-        <Grid item xs={12} sx={{ height: 650, width: '100%' }}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            pageSize={10}
-            rowsPerPageOptions={[10]}
-          />
-        </Grid>
+    <Grid container className="fadeIn">
+      <Grid item xs={12} sx={{ height: 650, width: '100%' }}>
+        <DataGrid
+          rows={orders}
+          columns={columns}
+          pageSize={10}
+          rowsPerPageOptions={[10]}
+        />
       </Grid>
-    </ShopLayout>
-  )
-}
+    </Grid>
+  </ShopLayout>
+)
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const session: any = await getSession({ req })
 
   const userId = session.user._id
 
-  const orders = await dbOrders.getOrdersByUser(userId)
+  const orders = await dbOrders.getHistoryOrdersByUser(userId)
 
   return {
     props: { orders }

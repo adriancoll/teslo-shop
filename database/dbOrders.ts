@@ -1,5 +1,5 @@
 import { isValidObjectId } from 'mongoose'
-import { IOrder } from '../interfaces'
+import { IOrder, THistoryOrder } from '../interfaces'
 import { db } from '.'
 import Order from '../models/Order'
 
@@ -26,4 +26,28 @@ export const getOrdersByUser = async (
   await db.disconnect()
 
   return JSON.parse(JSON.stringify(dbOrders))
+}
+
+export const getHistoryOrdersByUser = async (
+  userId: string
+): Promise<THistoryOrder[] | null> => {
+  if (!isValidObjectId(userId)) return []
+
+  await db.connect()
+  const dbHistoryOrders = await Order.find({ user: userId })
+    .select('_id isPaid shippingAddress')
+    .lean()
+
+  await db.disconnect()
+
+  return JSON.parse(
+    JSON.stringify(
+      dbHistoryOrders.map(({ _id, isPaid, shippingAddress }, idx) => ({
+        id: 1 + idx,
+        orderId: _id!,
+        paid: isPaid,
+        fullname: `${shippingAddress.firstName} ${shippingAddress.lastName}`
+      }))
+    )
+  )
 }

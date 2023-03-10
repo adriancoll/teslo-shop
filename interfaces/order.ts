@@ -40,3 +40,13 @@ export interface TShippingAddress {
   country           : string
   phone             : string
 }
+
+
+// HISTORY
+
+export type THistoryOrder = {
+  id: number
+  orderId: string
+  paid: boolean
+  fullname: string
+}
