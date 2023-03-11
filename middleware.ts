@@ -2,30 +2,49 @@ import { getToken } from 'next-auth/jwt'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const LOGIN_URL = '/auth/login'
+const validRoles = ['admin']
 
 export async function middleware(req: NextRequest) {
-  const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
+  const session: any = await getToken({
+    req,
+    secret: process.env.NEXTAUTH_SECRET
+  })
 
-  // console.log('[middleware] - ', { session })
-
+  // If is not logged in
   if (!session) {
-    /** @example {String} /checkout/address */
-    const requestedPage = req.nextUrl.pathname
+    if (req.nextUrl.pathname.startsWith('/api/admin')) {
+      return NextResponse.redirect(new URL('/api/auth/unauthorized', req.url));
+    }
+ 
+    const requestedPage = req.nextUrl.pathname;
+    return NextResponse.redirect(new URL(`/auth/login?p=${requestedPage}`, req.url));;
+  }
 
-    const url = req.nextUrl.clone()
 
-    url.pathname = LOGIN_URL
-    // Add it to search params to logged in redirect
-    url.search = `p=${requestedPage}`
-
-    return NextResponse.redirect(url)
+  // Admin Routes validations
+  if (req.nextUrl.pathname.startsWith('/admin')) {
+    if (!validRoles.includes(session.user.role)) {
+      return NextResponse.redirect(new URL('/', req.url));
+    }
+  }
+ 
+  if (req.nextUrl.pathname.startsWith('/api/admin')) {
+    if (!validRoles.includes(session.user.role)) {
+      return NextResponse.redirect(new URL('/api/auth/unauthorized', req.url));
+    }
   }
 
   return NextResponse.next()
 }
 
+
 export const config = {
-  //   matcher: ['/checkout/*']8
-  matcher: ['/checkout/:path*', '/orders/:path*']
+  matcher: [
+    // Client routes
+    '/checkout/:path*',
+    '/orders/:path*',
+    // Admin routes
+    '/admin/:path*',
+    '/api/admin/:path*'
+  ]
 }
