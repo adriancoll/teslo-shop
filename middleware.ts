@@ -10,6 +10,7 @@ export async function middleware(req: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET
   })
 
+  
   // If is not logged in
   if (!session) {
     if (req.nextUrl.pathname.startsWith('/api/admin')) {
@@ -20,6 +21,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL(`/auth/login?p=${requestedPage}`, req.url));;
   }
 
+  // User is logged in
 
   // Admin Routes validations
   if (req.nextUrl.pathname.startsWith('/admin')) {
@@ -36,7 +38,6 @@ export async function middleware(req: NextRequest) {
 
   return NextResponse.next()
 }
-
 
 export const config = {
   matcher: [
