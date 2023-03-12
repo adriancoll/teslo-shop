@@ -28,25 +28,21 @@ import {
   VpnKeyOutlined
 } from '@mui/icons-material'
 
-import { UiContext, AuthContext } from '../../context'
-import { useRouter } from 'next/router'
+import { useSideMenu } from '../../hooks'
 
 export const SideMenu = () => {
-  const router = useRouter()
-  const { isMenuOpen, toggleSideMenu } = useContext(UiContext)
-  const { user, isLoggedIn, logout } = useContext(AuthContext)
-
-  const [searchTerm, setSearchTerm] = useState('')
-
-  const onSearchTerm = () => {
-    if (searchTerm.trim().length === 0) return
-    navigateTo(`/search/${searchTerm}`)
-  }
-
-  const navigateTo = (url: string) => {
-    toggleSideMenu()
-    router.push(url)
-  }
+  const {
+    router,
+    navigateTo,
+    onSearchTerm,
+    isLoggedIn,
+    isMenuOpen,
+    logout,
+    toggleSideMenu,
+    user,
+    setSearchTerm,
+    searchTerm
+  } = useSideMenu()
 
   return (
     <Drawer
