@@ -7,7 +7,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { ShopLayout } from '../../components/layouts'
 import { getSession } from 'next-auth/react'
 import { dbOrders } from '../../database'
-import { IOrder, THistoryOrder } from '../../interfaces'
+import { THistoryOrder } from '../../interfaces'
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 100 },
